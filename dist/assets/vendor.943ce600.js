@@ -287,7 +287,8 @@ b`.split(/\n/).length!=3?function(i){for(var o=0,h=[],f=i.length;o<=f;){var m=i.
 									}
 								}
 
-							if(!el.href.startsWith('javascript'))window.open(el.href, '_blank');
+							if(!el.href || el.href.startsWith('javascript'))return;
+         window.open(el.href, '_blank');
 							});
 							send_ok();
 						} catch(e) {
