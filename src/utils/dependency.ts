@@ -113,7 +113,26 @@ export const getSupportedVueVersions = () => {
 // 获取 layui-vue 版本
 export const getSupportedLayuiVueVersions = () => {
   let versions = $(getVersions('@layui/layui-vue'))
-  return computed(() =>
-    versions.filter((version) => compare(version, '0.2.5', '>='))
+  return computed(() =>{
+    // 如果最新版本是预发布版本，则显示最新版的所有预发布版本,否则过滤掉预发布版本
+    if(versions.length === 0)return[]
+    const layuiVersions = versions.filter((version) => compare(version, '0.2.5', '>='))
+    const filteredVersions: string[] = []
+    let isInPreRelease = layuiVersions[0].includes('-')
+    for (const v of layuiVersions) {
+      if (v.includes('-')) {
+        if (isInPreRelease) {
+          filteredVersions.push(v)
+        }
+      } else {
+        filteredVersions.push(v)
+        isInPreRelease = false
+      }
+      if (filteredVersions.length >= 20) {
+        break
+      }
+    }
+    return filteredVersions;
+  }
   )
 }
