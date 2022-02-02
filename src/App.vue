@@ -60,7 +60,7 @@ body {
 
 .dark .vue-repl,
 .vue-repl {
-  --color-branding: #409eff !important;
+  --color-branding: #5FB878 !important;
 }
 
 button {
