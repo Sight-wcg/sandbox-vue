@@ -80,6 +80,9 @@ export const genImportMap = ({ vue, layuiVue }: Partial<Versions> = {}) => {
       version: layuiVue,
       path: (layuiVue === 'latest' || compare(layuiVue, '0.3.6', '>=')) ? '/lib/index.min.js' : "/lib/layui-vue.es.min.js",
       source: 'jsdelivr',
+    },
+    '@layui/layer-vue': {
+      path:'/lib/layer-vue.es.min.js'
     }
   }
 

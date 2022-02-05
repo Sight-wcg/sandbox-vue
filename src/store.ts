@@ -259,6 +259,8 @@ export class ReplStore implements Store {
   async setLayuiVueVersion(version: string) {
     this.versions.layuiVue = version
     this.addDeps()
+
+    // eslint-disable-next-line no-console
     console.info(`[@layui/playground] Now using layui-vue version: ${version}`)
   }
 
