@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     Header: typeof import('./src/components/Header.vue')['default']
+    LayLayer: typeof import('@layui/layui-vue/lib/layui-vue.es.js')['LayLayer']
   }
 }
 

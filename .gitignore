@@ -2,4 +2,3 @@ node_modules
 .DS_Store
 .pnpm-debug.log*
 dist
-package-lock.json

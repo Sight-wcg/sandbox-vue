@@ -48,6 +48,11 @@ export function loadStyle() {
     link.onload = resolve
     link.onerror = reject
   	document.body.appendChild(link)
+
+    const style = document.createElement("style")
+    style.type = 'text/css'
+    style.innerHTML = 'body{margin:8px !important;}'
+    document.head.appendChild(style)
   })
 }
 `

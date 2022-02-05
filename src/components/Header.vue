@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Github from '@/icons/Github.vue'
 import Share from '@/icons/Share.vue'
+import Moon from '@/icons/Moon.vue'
+import Sun from '@/icons/Sun.vue'
 import {
   getSupportedLayuiVueVersions,
   getSupportedVueVersions,
@@ -26,7 +28,7 @@ const versions = reactive<
   >
 >({
   layuiVue: {
-    text: 'Layui Vue',
+    text: 'layui-vue',
     published: getSupportedLayuiVueVersions(),
     active: store.versions.layuiVue,
   },
@@ -49,6 +51,9 @@ async function copyLink() {
   alert('Sharable URL has been copied to clipboard.')
   // layer.msg("分享链接已复制到剪贴板");
 }
+
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 </script>
 
 <template>
@@ -86,6 +91,11 @@ async function copyLink() {
         </select>
       </div>
 
+      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
+        <Sun class="light" />
+        <Moon class="dark" />
+      </button>
+
       <button class="share" @click="copyLink">
         <share />
       </button>
@@ -104,8 +114,8 @@ async function copyLink() {
 
 <style>
 nav {
-  --base: #fff;
-  --bg: #393D49;
+  --base: #24292E;
+  --bg: #fff;
   --bg-light: #fff;
   --border: #ddd;
 
@@ -123,7 +133,7 @@ nav {
 
 .dark nav {
   --base: #ddd;
-  --bg: #1a1a1a;
+  --bg: #363A47;
   --bg-light: #242424;
   --border: #383838;
 
@@ -187,6 +197,20 @@ h1 img {
 
 .version:hover .active-version:after {
   border-top-color: var(--base);
+}
+
+.toggle-dark svg {
+  width: 18px;
+  height: 18px;
+  fill: #666;
+}
+
+.toggle-dark .dark,
+.dark .toggle-dark .light {
+  display: none;
+}
+.dark .toggle-dark .dark {
+  display: inline-block;
 }
 
 .dark .version:hover .active-version:after {

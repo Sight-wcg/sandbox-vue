@@ -3,8 +3,12 @@ import { Repl } from '@vue/repl'
 import { ReplStore } from './store'
 import Header from './components/Header.vue'
 import type { SFCOptions } from '@vue/repl'
+import { layer } from '@layui/layer-vue'
+import "@layui/layer-vue/lib/index.css"
 
 const loading = ref(true)
+
+const id = layer.load(2,{},()=>{});
 
 // enable experimental features
 const sfcOptions: SFCOptions = {
@@ -16,9 +20,10 @@ const sfcOptions: SFCOptions = {
 const store = new ReplStore({
   serializedState: location.hash.slice(1),
 })
-store.init().then(() => (loading.value = false))
-
-useDark()
+store.init().then(() => {
+  loading.value = false
+  layer.close(id);
+})
 
 // persist state
 watchEffect(() => history.replaceState({}, '', store.serialize()))
@@ -38,10 +43,6 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
       @keydown.meta.s.prevent
     />
   </div>
-  <!-- TODO 替换 loading -->
-  <!-- <template v-else>
-    <div v-loading="true" class="loading" element-loading-text="Loading..." />
-  </template> -->
 </template>
 
 <style>
@@ -58,9 +59,15 @@ body {
   height: calc(100vh - var(--nav-height));
 }
 
+.dark .vue-repl {
+  --bg: #1F2428 !important;
+  --bg-soft: #24292E !important;
+}
+
 .dark .vue-repl,
 .vue-repl {
   --color-branding: #5FB878 !important;
+  --color-branding-dark: #5FB878 !important;
 }
 
 button {
