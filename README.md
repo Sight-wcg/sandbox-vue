@@ -52,3 +52,10 @@ pnpm preview
 如果要部署在 `https://<USERNAME>.github.io/` 上，可以省略 `base` 使其默认为 `'/'`。
 
 如果要部署在 `https://<USERNAME>.github.io/<REPO>/` 上，例如仓库地址为` https://github.com/<USERNAME>/<REPO>`，那么需要设置 base 为 `'/<REPO>/'`。
+
+4. 部署
+
+运行 `deploy.sh` 脚本部署站点 
+```
+sh deploy.sh
+```
