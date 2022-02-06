@@ -1,12 +1,13 @@
 # layui-vue-playground
-
-[layui-vue-playground: https://layui-vue.gitee.io/layui-vue-playground]( https://layui-vue.gitee.io/layui-vue-playground)
+<a href="https://layui-vue.gitee.io/layui-vue-playground" target="_blank">layui-vue-playground: https://layui-vue.gitee.io/layui-vue-playground</a>
 
 ### 快速开始
 
 1. 下载
 
-`git clone https://gitee.com/layui-vue/layui-vue-playground.git`
+```
+git clone https://gitee.com/layui-vue/layui-vue-playground.git
+```
 
 2. 安装依赖
 
@@ -21,7 +22,7 @@ npm install
 
 ```
 # pnpm
- pnpm dev
+pnpm dev
 # npm
 npm run dev
 ```
