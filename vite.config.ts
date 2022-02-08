@@ -31,7 +31,9 @@ export default defineConfig(async () => {
         reactivityTransform: true
       }),
       AutoImport({
+        // 自动导入 vue vueUse 相关函数
         imports: ['vue', '@vueuse/core'],
+        // 自动导入 layer-vue 相关函数
         resolvers: [
           // @ts-ignore
           LayuiVueResolver()
@@ -39,6 +41,7 @@ export default defineConfig(async () => {
         dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
       }),
       Components({
+        // 自动解析 layui-vue 组件
         resolvers: [
           // @ts-ignore
           LayuiVueResolver()
