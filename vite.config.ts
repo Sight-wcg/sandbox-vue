@@ -33,31 +33,14 @@ export default defineConfig(async () => {
       AutoImport({
         imports: ['vue', '@vueuse/core'],
         resolvers: [
-          //  (name) => {
-          //   if (name.match(/^(layer|useLayer|LayLayer)$/)){
-          //     return { 
-          //       importName: name, 
-          //       path: '@layui/layer-vue',
-          //       sideEffects:'@layui/layer-vue/lib/index.css',
-          //     }
-          //   }
-          // }
+          // @ts-ignore
           LayuiVueResolver()
         ],
         dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
       }),
       Components({
         resolvers: [
-          // layui 自动按需加载解析
-          // (name) => {
-          //   if (name.match(/^Lay[A-Z]/)){
-          //     return { 
-          //       importName: name, 
-          //       path: '@layui/layui-vue/lib/index.js',
-          //       sideEffects:'@layui/layui-vue/lib/index.css',
-          //     }
-          //   }
-          // }
+          // @ts-ignore
           LayuiVueResolver()
         ],
       }),
