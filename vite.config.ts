@@ -8,6 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Inspect from 'vite-plugin-inspect'
 import { getPackageInfo } from 'local-pkg'
 import pkg from './package.json'
+import { LayuiVueResolver } from './src/utils/layui-vue'
 
 const pathSrc = path.resolve(__dirname, 'src')
 
@@ -47,15 +48,16 @@ export default defineConfig(async () => {
       Components({
         resolvers: [
           // layui 自动按需加载解析
-          (name) => {
-            if (name.match(/^Lay[A-Z]/)){
-              return { 
-                importName: name, 
-                path: '@layui/layui-vue/lib/layui-vue.es.js',
-                sideEffects:'@layui/layui-vue/lib/index.css',
-              }
-            }
-          }
+          // (name) => {
+          //   if (name.match(/^Lay[A-Z]/)){
+          //     return { 
+          //       importName: name, 
+          //       path: '@layui/layui-vue/lib/index.js',
+          //       sideEffects:'@layui/layui-vue/lib/index.css',
+          //     }
+          //   }
+          // }
+          LayuiVueResolver()
         ],
       }),
       Unocss({
