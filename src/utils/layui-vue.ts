@@ -2,8 +2,8 @@
  * Layui Vue Resolver
  * √ On-demand import components for @layui/layui-vue
  * √ component and style resolver for @layui/icons-vue
- * On-demand import style
- * layer
+ * √layer
+ * TODO On-demand import style
  */
 // TODO 待 css 完善
 const matchComponents = [
@@ -56,15 +56,7 @@ const matchComponents = [
     styleDir: '',
   },
   {
-    pattern: /^LayIcon$/,
-    styleDir: '',
-  },
-  {
     pattern: /^LayInput$/,
-    styleDir: '',
-  },
-  {
-    pattern: /^LayLayer$/,
     styleDir: '',
   },
   {
@@ -153,8 +145,10 @@ export interface LayuiVueResolverOptions {
   exclude?: string[]
 }
 
+const libRe = /^Lay[A-Z]/
+const layerRE = /^(layer|useLayer|LayLayer)$/
+const iconsRE = /^LayIcon$/
 const esComponentsFolder = '@layui/layui-vue/es'
-const iconsRe = /^([A-Z][\w]+Icon|LayIcon)$/
 
 function lowerCamelCase(str: string){
   return str.charAt(0).toLowerCase() + str.slice(1)
@@ -165,10 +159,6 @@ function getSideEffects(importName: string, options: LayuiVueResolverOptions){
 
   if (!importStyle)return
 
-  if(options.resolveIcons && importName.match(iconsRe)){
-    return `@layui/icons-vue/lib/index.css`
-  }
-
   let styleDir = lowerCamelCase(importName.slice(3))// LayBackTop -> backTop
   for (const item of matchComponents) {
     if (item.pattern.test(importName)) {
@@ -176,41 +166,34 @@ function getSideEffects(importName: string, options: LayuiVueResolverOptions){
       break
     }
   }
-  // FIXME 临时方案,部分组件样式未拆分,待 css 重新梳理后删除
-  if(!styleDir) {
-    return `${esComponentsFolder}/index/index.css`
-  }
-
+  // FIXME 临时方案,部分组件样式未拆分,待 css 重新梳理后修改
   if(importStyle === 'less'){
     return `@layui/layui-vue/lib/index.less`
-  }else {
-    return [
-      `${esComponentsFolder}/index/index.css`,
-    ]
-    // TODO 待 css 重新梳理后启用
-    // return `${esComponentsFolder}/${styleDir}/index.css`
+  }else{
+    return styleDir ? `${esComponentsFolder}/${styleDir}/index.css` : `${esComponentsFolder}/index/index.css`
   }
 }
 
-// TODO layer,useLayer 自动导入
-
-
 function resolveComponent(name: string, options: LayuiVueResolverOptions){
-  if (!name.match(/^Lay[A-Z]/) || options?.exclude?.includes(name)) return
-  
-  if (options.resolveIcons && name.match(iconsRe)) {
-    return {
-      importName: name,
-      path: `@layui/icons-vue`,
-      sideEffects: getSideEffects(name, options)
-    }
-  }
+  const { importStyle = true } = options
+  let importName: string | undefined = undefined;
+  let path : string = `@layui/layui-vue`;
+  let sideEffects: string | string[] | undefined;
 
-  return { 
-    importName: name, 
-    path: `@layui/layui-vue`,
-    sideEffects: getSideEffects(name, options),
+  if(options.resolveIcons && name.match(iconsRE)){
+    importName = name;
+    path = `@layui/icons-vue`
+    sideEffects = importStyle ? `@layui/icons-vue/lib/index.css` : undefined
+  }else if(name.match(layerRE)){
+    importName = name;
+    path = `@layui/layer-vue`
+    sideEffects = importStyle ? `@layui/layer-vue/lib/index.css` : undefined
+  }else if(name.match(libRe) && !options?.exclude?.includes(name)) {
+    importName = name;
+    path = `@layui/layui-vue`
+    sideEffects = getSideEffects(name, options)
   }
+  return importName ? { importName, path, sideEffects } : null
 }
 
 /**

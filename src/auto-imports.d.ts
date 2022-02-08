@@ -31,6 +31,7 @@ declare global {
   const isDefined: typeof import('@vueuse/core')['isDefined']
   const isReadonly: typeof import('vue')['isReadonly']
   const isRef: typeof import('vue')['isRef']
+  const layer: typeof import('@layui/layer-vue')['layer']
   const makeDestructurable: typeof import('@vueuse/core')['makeDestructurable']
   const markRaw: typeof import('vue')['markRaw']
   const nextTick: typeof import('vue')['nextTick']
