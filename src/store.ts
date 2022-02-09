@@ -38,7 +38,7 @@ const msg = ref('Hello World!')
 // 全量引入 layui
 const LayuiVueCode = (version: string) => `
 import { getCurrentInstance } from 'vue'
-import Layui,{useLayer} from '@layui/layui-vue'
+import Layui,{ useLayer } from '@layui/layui-vue'
 
 let installed = false
 
@@ -143,7 +143,7 @@ export class ReplStore implements Store {
   }
 
   deleteFile(filename: string) {
-    if (filename === LAYUI_VUE_FILE) {
+    if (filename === LAYUI_VUE_FILE || filename === defaultMainFile) {
       alert("You cannot remove it, because layui-vue requires it.")
       return
     }
