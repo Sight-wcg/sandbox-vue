@@ -49,7 +49,6 @@ export function setupLayuiVue() {
   if(installed) return
   const instance = getCurrentInstance()
   instance.appContext.app.use(Layui)
-  instance.appContext.app.config.globalProperties.$layer = useLayer(instance.appContext) 
   installed = true
 }
 
