@@ -119,7 +119,7 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
 
       
       <button title="Fullscreen" class="fullscreen" @click="toggle">
-        <LayIcon :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')" />
+        <LayIcon size="18px" :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')" style="font-weight:500" />
       </button>
 
       <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
@@ -235,7 +235,16 @@ h1 img {
 }
 
 .dark .fullscreen{
-  color: #666
+  color: #aaa;
+}
+.dark svg > path {
+  fill: #aaa;
+}
+.dark .download svg > g {
+  fill: #aaa;
+}
+.dark .share svg > g {
+  stroke: #aaa;
 }
 
 .toggle-dark svg {
@@ -243,6 +252,8 @@ h1 img {
   height: 18px;
   fill: #666;
 }
+
+
 
 .toggle-dark .dark,
 .dark .toggle-dark .light {
