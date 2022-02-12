@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Download  from '@/icons/Download.vue'
 import Github from '@/icons/Github.vue'
 import Share from '@/icons/Share.vue'
 import Moon from '@/icons/Moon.vue'
@@ -9,6 +10,7 @@ import {
 } from '../utils/dependency'
 import type { ComputedRef } from 'vue'
 import type { ReplStore, VersionKey } from '../store'
+import { downloadProject } from '../download/download'
 
 const appVersion = import.meta.env.APP_VERSION
 const replVersion = import.meta.env.REPL_VERSION
@@ -50,6 +52,10 @@ async function copyLink() {
   await navigator.clipboard.writeText(location.href)
   alert('Sharable URL has been copied to clipboard.')
   // layer.msg("分享链接已复制到剪贴板");
+}
+
+async function downloadExample() {
+  await downloadProject(store)
 }
 
 const isDark = useDark();
@@ -98,6 +104,10 @@ const toggleDark = useToggle(isDark);
 
       <button class="share" @click="copyLink">
         <share />
+      </button>
+
+      <button class="download" @click="downloadExample">
+        <Download/>
       </button>
 
       <button title="View on Gitee" class="github">
@@ -250,7 +260,8 @@ h1 img {
 }
 
 .share,
-.github {
+.github,
+.download {
   margin: 0 2px;
 }
 </style>

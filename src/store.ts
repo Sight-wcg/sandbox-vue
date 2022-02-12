@@ -7,9 +7,9 @@ import type { Store, SFCOptions, StoreState, OutputModes } from '@vue/repl'
 export type VersionKey = 'vue' | 'layuiVue'
 export type Versions = Record<VersionKey, string>
 
-const defaultMainFile = 'PlaygroundMain.vue'
-const defaultAppFile = 'App.vue'
-const LAYUI_VUE_FILE = 'layui-vue.js'
+export const defaultMainFile = 'PlaygroundMain.vue'
+export const defaultAppFile = 'App.vue'
+export const LAYUI_VUE_FILE = 'layui-vue.js'
 
 const mainCode = `
 <script setup>
