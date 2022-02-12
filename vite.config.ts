@@ -49,7 +49,7 @@ export default defineConfig(async () => {
         // 自动解析 layui-vue 组件
         resolvers: [
           // @ts-ignore
-          LayuiVueResolver()
+          LayuiVueResolver({ resolveIcons: true })
         ],
       }),
       Unocss({

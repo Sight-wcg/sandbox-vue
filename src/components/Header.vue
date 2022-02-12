@@ -15,8 +15,9 @@ import { downloadProject } from '../download/download'
 const appVersion = import.meta.env.APP_VERSION
 const replVersion = import.meta.env.REPL_VERSION
 
-const { store } = defineProps<{
-  store: ReplStore
+const { store, fullscreenTarget} = defineProps<{
+  store: ReplStore,
+  fullscreenTarget: any
 }>()
 
 const versions = reactive<
@@ -47,19 +48,38 @@ async function setVersion(key: VersionKey, v: string) {
   versions[key].active = v
 }
 
-// TODO 修改消息提示
 async function copyLink() {
   await navigator.clipboard.writeText(location.href)
-  alert('Sharable URL has been copied to clipboard.')
-  // layer.msg("分享链接已复制到剪贴板");
+  //alert('Sharable URL has been copied to clipboard.')
+  layer.msg('链接已复制到剪贴板', { time: 1000 , offset:['30%','50%']}, () => {});
 }
 
 async function downloadExample() {
-  await downloadProject(store)
+    layer.confirm("下载项目文件?", { 
+    title: '消息',
+    icon: 3,
+    offset: ['40%', '50%'],
+    btn: [{ 
+      text: '确定',
+      async callback() { 
+        await downloadProject(store)
+        layer.closeAll() 
+      } 
+    }, { 
+      text: '取消',
+      callback() { 
+        layer.closeAll()
+      } 
+    }
+  ]}, 
+  () => {})
 }
 
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
+
+const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
+
 </script>
 
 <template>
@@ -97,16 +117,21 @@ const toggleDark = useToggle(isDark);
         </select>
       </div>
 
+      
+      <button title="Fullscreen" class="fullscreen" @click="toggle">
+        <LayIcon :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')" />
+      </button>
+
       <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
         <Sun class="light" />
         <Moon class="dark" />
       </button>
 
-      <button class="share" @click="copyLink">
+      <button title="Share" class="share" @click="copyLink">
         <share />
       </button>
 
-      <button class="download" @click="downloadExample">
+      <button title="Download" class="download" @click="downloadExample">
         <Download/>
       </button>
 
@@ -209,6 +234,10 @@ h1 img {
   border-top-color: var(--base);
 }
 
+.dark .fullscreen{
+  color: #666
+}
+
 .toggle-dark svg {
   width: 18px;
   height: 18px;
@@ -261,7 +290,8 @@ h1 img {
 
 .share,
 .github,
-.download {
+.download,
+.fullscreen {
   margin: 0 2px;
 }
 </style>

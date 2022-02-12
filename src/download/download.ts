@@ -10,9 +10,9 @@ import tsconfig from './template/tsconfig.json?raw'
 
 
 export async function downloadProject(store: any) {
-  if (!confirm('Download example project files?')) {
+/*   if (!confirm('Download example project files?')) {
     return
-  }
+  } */
 
   const { default: JSZip } = await import('jszip')
   const zip = new JSZip()

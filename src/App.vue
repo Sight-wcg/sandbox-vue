@@ -6,7 +6,9 @@ import type { SFCOptions } from '@vue/repl'
 
 const loading = ref(true)
 
-const id = layer.load(2,{},()=>{});
+const layerLoadingId = layer.load(2,{},()=>{});
+
+const repl = ref<HTMLElement | null>(null)
 
 // enable experimental features
 const sfcOptions: SFCOptions = {
@@ -20,7 +22,7 @@ const store = new ReplStore({
 })
 store.init().then(() => {
   loading.value = false
-  layer.close(id);
+  layer.close(layerLoadingId);
 })
 
 // persist state
@@ -29,7 +31,7 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
 
 <template>
   <div v-if="!loading" class="antialiased">
-    <Header :store="store" />
+    <Header :store="store" :fullscreenTarget="repl" />
     <Repl
       ref="repl"
       :store="store"
