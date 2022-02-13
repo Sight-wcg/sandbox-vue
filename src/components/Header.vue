@@ -48,17 +48,47 @@ async function setVersion(key: VersionKey, v: string) {
   versions[key].active = v
 }
 
+async function onShare(){
+  const { share, isSupported } = useShare()
+  if(isSupported){
+    share({
+      title: 'layui-vue playground',
+      text: '来自 layui-vue playground 的分享!',
+      url: location.href,
+    })
+  }else{
+    copyLink()
+  }
+}
+
 async function copyLink() {
-  await navigator.clipboard.writeText(location.href)
+  const { isSupported, copy } = useClipboard()
+  const permissionWrite = usePermission('clipboard-write')
+  let successful = false 
+  if(isSupported && permissionWrite.value === 'granted'){
+    copy(location.href)
+    successful = true
+  }else{
+    let inputEl = document.createElement('input')
+    inputEl.value = location.href
+    document.body.appendChild(inputEl)
+    inputEl.select() // 选择对象;
+    document.execCommand('Copy') // 执行浏览器复制命令
+    inputEl.remove()
+    successful = true
+  }
+  if(successful){
+    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => {})
+  }else{
+    layer.msg('分享失败', { time: 1000 }, () => {})
+  }
   //alert('Sharable URL has been copied to clipboard.')
-  layer.msg('链接已复制到剪贴板', { time: 1000 , offset:['30%','50%']}, () => {});
 }
 
 async function downloadExample() {
     layer.confirm("下载项目文件?", { 
     title: '消息',
     icon: 3,
-    offset: ['40%', '50%'],
     btn: [{ 
       text: '确定',
       async callback() { 
@@ -122,12 +152,12 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
         <LayIcon size="18px" :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')" style="font-weight:500" />
       </button>
 
-      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
+      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark">
         <Sun class="light" />
         <Moon class="dark" />
       </button>
 
-      <button title="Share" class="share" @click="copyLink">
+      <button title="Share" class="share" @click="onShare">
         <share />
       </button>
 
