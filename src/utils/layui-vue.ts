@@ -147,7 +147,7 @@ export interface LayuiVueResolverOptions {
 
 const libRe = /^Lay[A-Z]/
 const layerRE = /^(layer|useLayer|LayLayer)$/
-const iconsRE = /^LayIcon$/
+const iconsRE = /^([A-Z][\w]+Icon|LayIcon)$/
 const esComponentsFolder = '@layui/layui-vue/es'
 
 function lowerCamelCase(str: string){
@@ -170,7 +170,7 @@ function getSideEffects(importName: string, options: LayuiVueResolverOptions){
   if(importStyle === 'less'){
     return `@layui/layui-vue/lib/index.less`
   }else{
-    return styleDir ? `${esComponentsFolder}/${styleDir}/index.css` : `${esComponentsFolder}/index/index.css`
+    return styleDir ? `${esComponentsFolder}/${styleDir}/index.css` : `${esComponentsFolder}/index/index2.css`
   }
 }
 

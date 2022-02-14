@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { defaultAppFile, defaultMainFile, LAYUI_VUE_FILE } from '../store'
+import { defaultMainFile, LAYUI_VUE_FILE } from '../store'
 
 import index from './template/index.html?raw'
 import main from './template/main.ts?raw'
