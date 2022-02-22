@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Repl } from '@vue/repl'
-import { ReplStore } from './store'
+import { ReplStore } from './store_'
 import Header from './components/Header.vue'
 import type { SFCOptions } from '@vue/repl'
 
 const loading = ref(true)
 
-const layerLoadingId = layer.load(2,{},()=>{});
+const layerLoadingId = layer.load(2, {}, () => { })
 
 const repl = ref<HTMLElement | null>(null)
 
@@ -48,8 +48,8 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
 <style>
 body {
   font-size: 13px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   margin: 0;
   --base: #444;
   --nav-height: 50px;
@@ -60,14 +60,14 @@ body {
 }
 
 .dark .vue-repl {
-  --bg: #1F2428 !important;
-  --bg-soft: #24292E !important;
+  --bg: #1f2428 !important;
+  --bg-soft: #24292e !important;
 }
 
 .dark .vue-repl,
 .vue-repl {
-  --color-branding: #5FB878 !important;
-  --color-branding-dark: #5FB878 !important;
+  --color-branding: #5fb878 !important;
+  --color-branding-dark: #5fb878 !important;
 }
 
 button {

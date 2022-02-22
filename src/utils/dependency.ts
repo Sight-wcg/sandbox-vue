@@ -2,6 +2,7 @@ import { compare } from 'compare-versions'
 import type { Versions } from 'src/store'
 import type { Ref } from 'vue'
 
+
 /**
  * 
  * @param pkg 包名
@@ -82,7 +83,7 @@ export const genImportMap = ({ vue, layuiVue }: Partial<Versions> = {}) => {
       source: 'jsdelivr',
     },
     '@layui/layer-vue': {
-      path:'/lib/layer-vue.es.min.js'
+      path: '/lib/layer-vue.es.min.js'
     }
   }
 
@@ -116,9 +117,9 @@ export const getSupportedVueVersions = () => {
 // 获取 layui-vue 版本
 export const getSupportedLayuiVueVersions = () => {
   let versions = $(getVersions('@layui/layui-vue'))
-  return computed(() =>{
+  return computed(() => {
     // 如果最新版本是预发布版本，则显示最新版的所有预发布版本,否则过滤掉预发布版本
-    if(versions.length === 0)return[]
+    if (versions.length === 0) return []
     const layuiVersions = versions.filter((version) => compare(version, '0.2.5', '>='))
     const filteredVersions: string[] = []
     let isInPreRelease = layuiVersions[0].includes('-')

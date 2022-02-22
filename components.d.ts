@@ -4,13 +4,8 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BluetoothIcon: typeof import('@layui/icons-vue')['BluetoothIcon']
     Header: typeof import('./src/components/Header.vue')['default']
     LayIcon: typeof import('@layui/icons-vue')['LayIcon']
-    LayLayer: typeof import('@layui/layer-vue')['LayLayer']
-    LayTab: typeof import('@layui/layui-vue')['LayTab']
-    LayTabItem: typeof import('@layui/layui-vue')['LayTabItem']
-    Settings: typeof import('./src/components/Settings.vue')['default']
   }
 }
 

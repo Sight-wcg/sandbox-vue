@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import Download  from '@/icons/Download.vue'
+import Download from '@/icons/Download.vue'
 import Github from '@/icons/Github.vue'
 import Share from '@/icons/Share.vue'
 import Moon from '@/icons/Moon.vue'
 import Sun from '@/icons/Sun.vue'
 import {
-  getSupportedLayuiVueVersions,
+  getSupportedVersions,
   getSupportedVueVersions,
-} from '../utils/dependency'
+} from '../utils/dependency_'
 import type { ComputedRef } from 'vue'
-import type { ReplStore, VersionKey } from '../store'
+import type { ReplStore, VersionKey } from '../store_'
 import { downloadProject } from '../download/download'
+import { config } from '../config/sandbox.config'
 
 const appVersion = import.meta.env.APP_VERSION
 const replVersion = import.meta.env.REPL_VERSION
 
-const { store, fullscreenTarget} = defineProps<{
+document.title = config.title
+
+const { store, fullscreenTarget } = defineProps<{
   store: ReplStore,
   fullscreenTarget: any
 }>()
@@ -30,10 +33,10 @@ const versions = reactive<
     }
   >
 >({
-  layuiVue: {
-    text: 'layui-vue',
-    published: getSupportedLayuiVueVersions(),
-    active: store.versions.layuiVue,
+  UILib: {
+    text: `${config.UIPackage}`,
+    published: getSupportedVersions(config.UIPackage, config.minSupportedVersion, config.filterPreRelease),
+    active: store.versions.UILib,
   },
   vue: {
     text: 'Vue',
@@ -43,20 +46,22 @@ const versions = reactive<
 })
 
 async function setVersion(key: VersionKey, v: string) {
+  layer.load(2, {}, () => { })
   versions[key].active = `loading...`
   await store.setVersion(key, v)
   versions[key].active = v
+  layer.closeAll()
 }
 
-async function onShare(){
+async function onShare() {
   const { share, isSupported } = useShare()
-  if(isSupported){
+  if (isSupported) {
     share({
-      title: 'layui-vue playground',
-      text: '来自 layui-vue playground 的分享!',
+      title: `${config.title}`,
+      text: `来自 ${config.title} 的分享!`,
       url: location.href,
     })
-  }else{
+  } else {
     copyLink()
   }
 }
@@ -64,11 +69,11 @@ async function onShare(){
 async function copyLink() {
   const { isSupported, copy } = useClipboard()
   const permissionWrite = usePermission('clipboard-write')
-  let successful = false 
-  if(isSupported && permissionWrite.value === 'granted'){
+  let successful = false
+  if (isSupported && permissionWrite.value === 'granted') {
     copy(location.href)
     successful = true
-  }else{
+  } else {
     let inputEl = document.createElement('input')
     inputEl.value = location.href
     document.body.appendChild(inputEl)
@@ -77,32 +82,33 @@ async function copyLink() {
     inputEl.remove()
     successful = true
   }
-  if(successful){
-    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => {})
-  }else{
-    layer.msg('分享失败', { time: 1000 }, () => {})
+  if (successful) {
+    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => { })
+  } else {
+    layer.msg('分享失败', { time: 1000 }, () => { })
   }
   //alert('Sharable URL has been copied to clipboard.')
 }
 
 async function downloadExample() {
-    layer.confirm("下载项目文件?", { 
+  layer.confirm("下载项目文件?", {
     title: '消息',
     icon: 3,
-    btn: [{ 
+    btn: [{
       text: '确定',
-      async callback() { 
+      async callback() {
         await downloadProject(store)
-        layer.closeAll() 
-      } 
-    }, { 
-      text: '取消',
-      callback() { 
         layer.closeAll()
-      } 
+      }
+    }, {
+      text: '取消',
+      callback() {
+        layer.closeAll()
+      }
     }
-  ]}, 
-  () => {})
+    ]
+  },
+    () => { })
 }
 
 const isDark = useDark();
@@ -117,39 +123,27 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
     <h1>
       <img alt="logo" src="/logo.svg" />
       <span class="lt-sm-hidden">
-        <span>Layui Vue Playground</span>
-        <small> (v{{ appVersion }}, repl v{{ replVersion }}) </small>
+        <span>{{ config.title }}</span>
+        <small>(v{{ appVersion }}, repl v{{ replVersion }})</small>
       </span>
     </h1>
 
     <!-- 版本选择 -->
     <div class="links">
-      <div
-        v-for="(v, key) of versions"
-        :key="key"
-        class="flex items-center lt-lg-hidden"
-      >
-        <span class="mr-1" style="margin-left: 15px;">{{ v.text }} Version:</span>
-        <select 
-          v-model="v.active"
-          @change="setVersion(key, v.active)"
-          style="width: 150px"
-          >
-          <option selected value="latest">{{v.published[0]}}</option>
-          <template v-for="(ver,index) of v.published" >
-            <option 
-              v-if="index != 0" 
-              :value="ver" 
-              :key="ver">
-              {{ver}}
-            </option>
-          </template>
+      <div v-for="(v, key) of versions" :key="key" class="flex items-center lt-lg-hidden">
+        <span class="mr-1" style="margin-left: 15px;">{{ v.text }} :</span>
+        <select v-model="v.active" @change="setVersion(key, v.active)" style="width: 150px">
+          <option disabled value>请选择</option>
+          <option v-for="(ver) of v.published" :value="ver" :key="ver">{{ ver }}</option>
         </select>
       </div>
 
-      
       <button title="Fullscreen" class="fullscreen" @click="toggle">
-        <LayIcon size="18px" :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')" style="font-weight:500" />
+        <LayIcon
+          size="18px"
+          :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')"
+          style="font-weight:500"
+        />
       </button>
 
       <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark">
@@ -162,14 +156,11 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
       </button>
 
       <button title="Download" class="download" @click="downloadExample">
-        <Download/>
+        <Download />
       </button>
 
       <button title="View on Gitee" class="github">
-        <a
-          href="https://gitee.com/layui-vue/layui-vue"
-          target="_blank"
-        >
+        <a href="https://gitee.com/layui-vue/layui-vue" target="_blank">
           <github />
         </a>
       </button>
@@ -179,7 +170,7 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
 
 <style>
 nav {
-  --base: #24292E;
+  --base: #24292e;
   --bg: #fff;
   --bg-light: #fff;
   --border: #ddd;
@@ -198,7 +189,7 @@ nav {
 
 .dark nav {
   --base: #ddd;
-  --bg: #363A47;
+  --bg: #363a47;
   --bg-light: #242424;
   --border: #383838;
 
@@ -212,7 +203,8 @@ h1 {
   font-weight: 300;
   display: inline-block;
   vertical-align: middle;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", Tahoma, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", Tahoma, Arial,
+    sans-serif;
 }
 
 h1 img {
@@ -249,7 +241,7 @@ h1 img {
 }
 
 .active-version:after {
-  content: '';
+  content: "";
   width: 0;
   height: 0;
   border-left: 4px solid transparent;
@@ -264,7 +256,7 @@ h1 img {
   border-top-color: var(--base);
 }
 
-.dark .fullscreen{
+.dark .fullscreen {
   color: #aaa;
 }
 .dark svg > path {
@@ -282,8 +274,6 @@ h1 img {
   height: 18px;
   fill: #666;
 }
-
-
 
 .toggle-dark .dark,
 .dark .toggle-dark .light {
