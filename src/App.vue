@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Repl } from '@vue/repl'
-import { ReplStore } from './store_'
+import { ReplStore } from './store'
 import Header from './components/Header.vue'
 import type { SFCOptions } from '@vue/repl'
 

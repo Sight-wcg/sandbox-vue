@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { defaultMainFile, LAYUI_VUE_FILE } from '../store'
+import { defaultMainFile, LIB_INSTALL_FILE } from '../store'
 
 import index from './template/index.html?raw'
 import main from './template/main.ts?raw'
@@ -10,13 +10,13 @@ import tsconfig from './template/tsconfig.json?raw'
 
 
 export async function downloadProject(store: any) {
-/*   if (!confirm('Download example project files?')) {
-    return
-  } */
+  /*   if (!confirm('Download example project files?')) {
+      return
+    } */
 
   const { default: JSZip } = await import('jszip')
   const zip = new JSZip()
-  const excludeFiles = [defaultMainFile, LAYUI_VUE_FILE, 'import-map.json']
+  const excludeFiles = [defaultMainFile, LIB_INSTALL_FILE, 'import-map.json']
 
   // basic structure
   zip.file('index.html', index)
@@ -24,7 +24,7 @@ export async function downloadProject(store: any) {
   zip.file('tsconfig.json', tsconfig)
   zip.file('vite.config.js', config)
   zip.file('README.md', readme)
- 
+
 
   // project src
   const src = zip.folder('src')!

@@ -7,9 +7,9 @@ import Sun from '@/icons/Sun.vue'
 import {
   getSupportedVersions,
   getSupportedVueVersions,
-} from '../utils/dependency_'
+} from '../utils/dependency'
 import type { ComputedRef } from 'vue'
-import type { ReplStore, VersionKey } from '../store_'
+import type { ReplStore, VersionKey } from '../store'
 import { downloadProject } from '../download/download'
 import { config } from '../config/sandbox.config'
 

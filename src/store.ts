@@ -1,28 +1,33 @@
 import { reactive, watchEffect } from 'vue'
 import { compileFile, File } from '@vue/repl'
-import { genImportMap, genUnpkgLink, genVueLink } from './utils/dependency'
+import { genImportMap, genLink, genVueLink } from './utils/dependency'
 import { utoa, atou } from './utils/encode'
 import type { Store, SFCOptions, StoreState, OutputModes } from '@vue/repl'
 
-export type VersionKey = 'vue' | 'layuiVue'
+import { config } from './config/sandbox.config'
+
+export type VersionKey = 'vue' | 'UILib'
 export type Versions = Record<VersionKey, string>
 
 export const defaultMainFile = 'PlaygroundMain.vue'
 export const defaultAppFile = 'App.vue'
-export const LAYUI_VUE_FILE = 'layui-vue.js'
+export const LIB_INSTALL_FILE = 'LibInstall.js'
 
+const UIPackage = config.UIPackage
+
+// PlaygroundMain.vue
 const mainCode = `
 <script setup>
 import App from './App.vue'
-import { setupLayuiVue } from './${LAYUI_VUE_FILE}'
-setupLayuiVue()
+import { setupLib } from './${LIB_INSTALL_FILE}'
+setupLib()
 </script>
 <template>
   <App />
 </template>`.trim()
 
-// 编辑区初始代码
-const welcomeCode = `
+// App.vue
+const defaultAppFileTemplate = config.defaultAppTemplate ?? `
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -31,24 +36,24 @@ const msg = ref('Hello World!')
 
 <template>
   <h1>{{ msg }}</h1>
-  <lay-input v-model="msg" style="width:350px"/>
+  <input v-model="msg" style="width:350px"/>
 </template>
 `.trim()
 
 // 全量引入 layui
-const LayuiVueCode = (version: string) => `
+const LibInstallFileCode = (version: string) => `
 import { getCurrentInstance } from 'vue'
-import Layui,{ useLayer } from '@layui/layui-vue'
+import UILibName from '${UIPackage}'
 
 let installed = false
 
 // 首先加载样式,防止页面闪烁
 await loadStyle()
 
-export function setupLayuiVue() {
+export function setupLib() {
   if(installed) return
   const instance = getCurrentInstance()
-  instance.appContext.app.use(Layui)
+  instance.appContext.app.use(UILibName)
   installed = true
 }
 
@@ -56,7 +61,7 @@ export function loadStyle() {
   return new Promise((resolve, reject) => {
     const link = document.createElement('link')
   	link.rel = 'stylesheet'
-  	link.href = '${genUnpkgLink('@layui/layui-vue', version, '/lib/index.css')}'
+  	link.href = '${genLink(UIPackage, version, true)}'
     link.onload = resolve
     link.onerror = reject
   	document.body.appendChild(link)
@@ -81,9 +86,10 @@ export class ReplStore implements Store {
 
   private pendingCompiler: Promise<typeof import('vue/compiler-sfc')> | null = null
 
+  // 默认不设置版本
   constructor({
     serializedState = '',
-    versions = { vue: 'latest', layuiVue: 'latest' },
+    versions = { vue: '', UILib: '' },
   }: {
     serializedState?: string
     versions?: Versions
@@ -95,7 +101,7 @@ export class ReplStore implements Store {
         files[filename] = new File(filename, saved[filename])
       }
     } else {
-      files[defaultAppFile] = new File(defaultAppFile, welcomeCode)
+      files[defaultAppFile] = new File(defaultAppFile, defaultAppFileTemplate)
     }
 
     files[defaultMainFile] = new File(defaultMainFile, mainCode, isHidden)
@@ -113,9 +119,9 @@ export class ReplStore implements Store {
 
   async init() {
     await this.setVueVersion(this.versions.vue)
-    this.state.files[LAYUI_VUE_FILE] = new File(
-      LAYUI_VUE_FILE,
-      LayuiVueCode('latest').trim(),
+    this.state.files[LIB_INSTALL_FILE] = new File(
+      LIB_INSTALL_FILE,
+      LibInstallFileCode('').trim(),
       isHidden
     )
 
@@ -142,8 +148,8 @@ export class ReplStore implements Store {
   }
 
   deleteFile(filename: string) {
-    if (filename === LAYUI_VUE_FILE || filename === defaultMainFile) {
-      alert("You cannot remove it, because layui-vue requires it.")
+    if (filename === LIB_INSTALL_FILE || filename === defaultMainFile) {
+      alert(`You cannot remove it, because ${UIPackage} requires it.`)
       return
     }
     if (confirm(`Are you sure you want to delete ${filename}?`)) {
@@ -172,12 +178,12 @@ export class ReplStore implements Store {
   serialize() {
     const data = JSON.stringify(
       Object.fromEntries(
-       Object.entries(this.getFiles()).map(([file, content]) => {
+        Object.entries(this.getFiles()).map(([file, content]) => {
           if (file === 'import-map.json') {
             try {
               const importMap = this.simplifyImportMaps()
               return [file, importMap]
-            } catch {}
+            } catch { }
           }
           return [file, content]
         })
@@ -229,7 +235,7 @@ export class ReplStore implements Store {
       ...importMap.imports,
       ...genImportMap({
         vue: this.versions.vue,
-        layuiVue: this.versions.layuiVue,
+        UILib: this.versions.UILib,
       }),
     }
     this.setImportMap(importMap)
@@ -237,8 +243,8 @@ export class ReplStore implements Store {
 
   async setVersion(key: VersionKey, version: string) {
     switch (key) {
-      case 'layuiVue':
-        await this.setLayuiVueVersion(version)
+      case 'UILib':
+        await this.setUILibVersion(version)
         break
       case 'vue':
         await this.setVueVersion(version)
@@ -246,17 +252,17 @@ export class ReplStore implements Store {
     }
   }
 
-  async setLayuiVueVersion(version: string) {
-    this.versions.layuiVue = version
+  async setUILibVersion(version: string) {
+    this.versions.UILib = version
     this.addDeps()
 
     // eslint-disable-next-line no-console
-    console.info(`[@layui/playground] Now using layui-vue version: ${version}`)
+    console.info(`[${UIPackage}/playground] Now using ${UIPackage} version: ${version}`)
   }
 
   async setVueVersion(version: string) {
     const { compilerSfc, runtimeDom } = genVueLink(version)
-
+    if (!compilerSfc || !runtimeDom) return
     this.pendingCompiler = import(/* @vite-ignore */ compilerSfc)
     this.compiler = await this.pendingCompiler
     this.pendingCompiler = null
