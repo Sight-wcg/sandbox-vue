@@ -48,6 +48,6 @@ jobs:
           # 要发布的文件夹
           publish_dir: ./dist
           # 发布到的分支
-          publish_branch: master
+          publish_branch: page
           # 仅使用最新提交创建发布分支
           force_orphan: true
