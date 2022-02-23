@@ -20,11 +20,9 @@ export interface Dependency {
   // 依赖源
   source?: DependencySource["name"];
 }
-export default {
 
-}
 /**
- * 支持以下组件库
+ * 支持以下组件库,需要全量 ESM 构建包
  * @layui/layui-vue
  * element-plus
  * vant
@@ -33,16 +31,16 @@ export default {
  */
 export const config = {
   title: 'sandbox-vue',
-  //UIPackage: 'ant-design-vue',
   UIPackage: '@layui/layui-vue',
-  //UIPackage: 'vue-devui',
-  //UIPackage: 'vue-devui',
   //UIPackage: 'element-plus',
-  //UIPackage: 'naive-ui',
   //UIPackage: 'vant',
+  //UIPackage: 'vue-devui',
+  //UIPackage: 'quasar',
+
+  //UIPackage: 'naive-ui',
+  //UIPackage: 'ant-design-vue',
   //UIPackage: 'tdesign-vue-next',
   //UIPackage: '@arco-design/web-vue',
-  //UIPackage: 'quasar',
   minSupportedVersion: '0.2.5',
   filterPreRelease: false,
   defaultAppTemplate: defaultAppTemplate.trim()
