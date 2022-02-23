@@ -1,6 +1,6 @@
-# sandbox-vue
+# [sandbox-vue](https://layui-vue.gitee.io/layui-vue-playground)
 
-一个 Vue3 SFC 沙盒。[sandbox-vue]: https://layui-vue.gitee.io/layui-vue-playground</a>
+一个 Vue3 SFC 沙盒。[sandbox-vue](https://layui-vue.gitee.io/layui-vue-playground)
 
 ### 快速开始
 
@@ -19,7 +19,7 @@ npm run dev
 ### 配置
 
 ```
-// 1. 配置基本信息和组件库依赖 src/config/sandbox.config.js
+ 1. 配置基本信息和组件库依赖 src/config/sandbox.config.js
 
 // 基本信息
 export const config = {
@@ -59,7 +59,8 @@ export interface Dependency {
   source?: DependencySource["name"];
 }
 
-// APP.vue 模板 /src/config/defaultAppTemplate.vue
+2. APP.vue 模板  /src/config/defaultAppTemplate.vue 
+
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -79,7 +80,7 @@ const msg = ref('Hello World!')
 
 1. 构建应用
 
-运行 `npm run build` 命令来执行应用的构建，默认情况下，构建会输出到 dist 文件夹中
+运行 `npm run build` 命令来执行应用的构建，默认情况下，构建会输出到 `dist` 文件夹中
 
 ```
 npm run build
@@ -101,4 +102,4 @@ npm run preview
 
 如果要部署在 `https://<USERNAME>.github.io/<REPO>/` 上，例如仓库地址为` https://github.com/<USERNAME>/<REPO>`，那么需要设置 base 为 `'/<REPO>/'`。
 
-> 本项目受[Vue SFC Playground](https://sfc.vuejs.org/) 和 [element-plus-playground](https://github.com/element-plus/element-plus-playground)启发
+> 本项目受 [Vue SFC Playground](https://sfc.vuejs.org/) 和 [element-plus-playground](https://github.com/element-plus/element-plus-playground) 启发
