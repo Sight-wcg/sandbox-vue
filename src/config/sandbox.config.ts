@@ -25,15 +25,18 @@ export default {
 }
 /**
  * 支持以下组件库
- * @layui-vue
+ * @layui/layui-vue
  * element-plus
  * vant
  * quasar
+ * vue-devui
  */
 export const config = {
   title: 'sandbox-vue',
   //UIPackage: 'ant-design-vue',
   UIPackage: '@layui/layui-vue',
+  //UIPackage: 'vue-devui',
+  //UIPackage: 'vue-devui',
   //UIPackage: 'element-plus',
   //UIPackage: 'naive-ui',
   //UIPackage: 'vant',
@@ -55,9 +58,14 @@ export const dependencySources: DependencySource[] = [
     url: 'https://cdn.jsdelivr.net/npm/',
   },
   {
+    name: 'skypack',
+    url: 'https://cdn.skypack.dev/',
+  },
+  {
     name: 'custom',
     url: 'import.meta.env.BASE_URL' + 'lib',
   },
+
 ]
 
 export const dependencies: Dependency[] = [
@@ -101,24 +109,34 @@ export const dependencies: Dependency[] = [
     description: 'layer弹层',
     source: 'jsdelivr',
   },
-  {
-    name: 'element-plus',
-    version: '',
-    path: '/dist/index.full.mjs',
-    stylePath: '/dist/index.css',
-    description: 'element plus 组件库',
-    source: 'unpkg',
-  },
+
+  // {
+  //   name: 'element-plus',
+  //   version: '',
+  //   path: '/dist/index.full.mjs',
+  //   stylePath: '/dist/index.css',
+  //   description: 'element plus 组件库',
+  //   source: 'unpkg',
+  // },
+
+  // {
+  //   name: 'vue-devui',
+  //   version: '',
+  //   path: '/vue-devui.es.js',
+  //   stylePath: '/style.css',
+  //   description: 'Devui 组件库',
+  //   source: 'unpkg',
+  // },
 
   // 无默认导出,Store 中 { Quasar } 引入
-  {
-    name: 'quasar',
-    version: '',
-    path: '/dist/quasar.esm.prod.js',
-    stylePath: '/dist/quasar.prod.css',
-    description: 'quasar 组件库',
-    source: 'unpkg',
-  },
+  // {
+  //   name: 'quasar',
+  //   version: '',
+  //   path: '/dist/quasar.esm.prod.js',
+  //   stylePath: '/dist/quasar.prod.css',
+  //   description: 'quasar 组件库',
+  //   source: 'unpkg',
+  // },
 
   // {
   //   name: '@arco-design/web-vue',
@@ -130,12 +148,30 @@ export const dependencies: Dependency[] = [
   // },
 
   // {
+  //   name: '@arco-design/web-vue',
+  //   version: '',
+  //   path: '',
+  //   stylePath: '/dist/arco.css',
+  //   description: 'arco-design 组件库',
+  //   source: 'skypack',
+  // },
+
+  // {
   //   name: 'tdesign-vue-next',
   //   version: '',
   //   path: '/es/index.js',
   //   stylePath: '/dist/tdesign.css',
   //   description: 'tdesign-vue-next 组件库',
   //   source: 'unpkg',
+  // },
+
+  // {
+  //   name: 'ant-design-vue',
+  //   version: '2.1.0',
+  //   path: '',
+  //   stylePath: '/dist/antd.css',
+  //   description: 'ant-design-vue 组件库',
+  //   source: 'skypack',
   // },
 
   // {
@@ -155,28 +191,29 @@ export const dependencies: Dependency[] = [
   //   description: 'naive ui 组件库',
   //   source: 'unpkg',
   // },
-  {
-    name: 'vant',
-    version: '',
-    path: '/lib/vant.es.js',
-    stylePath: '/lib/index.css',
-    description: 'vant 组件库',
-    source: 'unpkg',
-  },
-  {
-    name: '@vant/use',
-    version: '',
-    path: '/dist/index.esm.js',
-    stylePath: '',
-    description: 'vant use',
-    source: 'unpkg',
-  },
-  {
-    name: '@vant/popperjs',
-    version: '',
-    path: '/dist/esm/index.js',
-    stylePath: '',
-    description: 'vant use',
-    source: 'unpkg',
-  },
+
+  // {
+  //   name: 'vant',
+  //   version: '',
+  //   path: '/lib/vant.es.js',
+  //   stylePath: '/lib/index.css',
+  //   description: 'vant 组件库',
+  //   source: 'unpkg',
+  // },
+  // {
+  //   name: '@vant/use',
+  //   version: '',
+  //   path: '/dist/index.esm.js',
+  //   stylePath: '',
+  //   description: 'vant use',
+  //   source: 'unpkg',
+  // },
+  // {
+  //   name: '@vant/popperjs',
+  //   version: '',
+  //   path: '/dist/esm/index.js',
+  //   stylePath: '',
+  //   description: 'vant use',
+  //   source: 'unpkg',
+  // },
 ]
