@@ -253,6 +253,7 @@ export class ReplStore implements Store {
   }
 
   async setUILibVersion(version: string) {
+    this.state.files[LIB_INSTALL_FILE].code = LibInstallFileCode(version).trim()
     this.versions.UILib = version
     this.addDeps()
 
