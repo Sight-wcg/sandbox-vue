@@ -73,7 +73,7 @@ export const dependencies: Dependency[] = [
     path: '/dist/runtime-dom.esm-browser.js',
     stylePath: '',
     description: '',
-    source: 'jsdelivr',
+    source: 'unpkg',
   },
   {
     name: '@vue/compiler-sfc',
@@ -81,7 +81,7 @@ export const dependencies: Dependency[] = [
     path: '/dist/compiler-sfc.esm-browser.js',
     stylePath: '',
     description: '编译 SFC 组件',
-    source: 'jsdelivr',
+    source: 'unpkg',
   },
   {
     name: '@vue/shared',
@@ -89,7 +89,7 @@ export const dependencies: Dependency[] = [
     path: '/dist/shared.esm-bundler.js',
     stylePath: '',
     description: '',
-    source: 'jsdelivr',
+    source: 'unpkg',
   },
   {
     name: '@layui/layui-vue',
@@ -97,7 +97,7 @@ export const dependencies: Dependency[] = [
     path: '/lib/index.js',
     stylePath: '/lib/index.css',
     description: 'layui-vue组件库',
-    source: 'jsdelivr',
+    source: 'unpkg',
   },
   {
     name: '@layui/layer-vue',
@@ -105,7 +105,7 @@ export const dependencies: Dependency[] = [
     path: '/lib/layer-vue.es.js',
     stylePath: '',
     description: 'layer弹层',
-    source: 'jsdelivr',
+    source: 'unpkg',
   },
 
   // {

@@ -4,34 +4,30 @@ import type { Ref } from 'vue'
 
 import { dependencies, dependencySources, config as config } from '../config/sandbox.config'
 
-// 获取依赖源,默认第一个
+/**
+ * 获取依赖源,默认第一个
+ * @param sourceName 源名称
+ * @returns 源信息
+ */
 const getDependencySources = (sourceName?: string) => {
-  let source = dependencySources[0]
-  if (sourceName) {
-    for (const dependencySource of dependencySources) {
-      if (dependencySource.name === sourceName) {
-        source = dependencySource
-        break
-      }
-    }
-  }
-  return source
+  return dependencySources.find((depSource) => depSource.name === sourceName)
+    ?? dependencySources[0]
 }
 
-// 获取指定包信息
+/**
+ * 获取指定包信息
+ * @param pkg 包名
+ * @returns 包信息
+ */
 const getPackageInfo = (pkg: string) => {
-  for (const dependency of dependencies) {
-    if (dependency.name === pkg) {
-      return dependency
-    }
-  }
+  return dependencies.find((dep) => dep.name === pkg)
 }
 /**
  * 
  * @param pkg 包名
- * @param version 版本
- * @param path 路径
- * @returns unpkg CDN 链接
+ * @param pkgVersion 版本
+ * @param isStyle 是否获取样式路径
+ * @returns 生成的链接
  */
 export const genLink = (pkg: string, pkgVersion?: string, isStyle?: boolean) => {
   const packageInfo = getPackageInfo(pkg);
@@ -42,6 +38,39 @@ export const genLink = (pkg: string, pkgVersion?: string, isStyle?: boolean) => 
   const dependencySource = getDependencySources(source)
   return `${dependencySource.url}${pkgName}${version}${isStyle ? stylePath : path}`
 }
+
+/**
+ * 
+ * @param pkg 包名
+ * @param version 版本
+ * @param path 路径
+ * @returns unpkg CDN 链接
+ */
+export const genUnpkgLink = (
+  pkg: string,
+  version: string | undefined,
+  path: string
+) => {
+  version = version ? `@${version}` : ''
+  return `https://unpkg.com/${pkg}${version}${path}`
+}
+
+/**
+ * 
+ * @param pkg 包名
+ * @param version 版本
+ * @param path 路径
+ * @returns Jsdelivr CDN 链接
+ */
+export const genJsdelivrLink = (
+  pkg: string,
+  version: string | undefined,
+  path: string
+) => {
+  version = version ? `@${version}` : ''
+  return `https://cdn.jsdelivr.net/npm/${pkg}${version}${path}`
+}
+
 
 /**
  * 生成 Vue 链接
@@ -96,6 +125,7 @@ export const getSupportedVersions = (pkg: string, minSupportedVersion: string, f
   return computed(() => {
     if (versions.length === 0) return []
     let supportedVersions = versions.filter((version) => compare(version, minSupportedVersion, '>='))
+    // 如果最新版本是预发布版本，则显示最新版的所有预发布版本,否则过滤掉预发布版本
     if (filterPreRelease) {
       const filteredVersions: string[] = []
       let isInPreRelease = supportedVersions[0].includes('-')
@@ -108,7 +138,7 @@ export const getSupportedVersions = (pkg: string, minSupportedVersion: string, f
           filteredVersions.push(v)
           isInPreRelease = false
         }
-        if (filteredVersions.length >= 20) {
+        if (filteredVersions.length >= 30) {
           break
         }
       }
@@ -123,32 +153,5 @@ export const getSupportedVueVersions = () => {
   let versions = $(getVersions('vue'))
   return computed(() =>
     versions.filter((version) => compare(version, '3.2.0', '>='))
-  )
-}
-
-// 获取 layui-vue 版本
-export const getSupportedLayuiVueVersions = () => {
-  let versions = $(getVersions('@layui/layui-vue'))
-  return computed(() => {
-    // 如果最新版本是预发布版本，则显示最新版的所有预发布版本,否则过滤掉预发布版本
-    if (versions.length === 0) return []
-    const layuiVersions = versions.filter((version) => compare(version, '0.2.5', '>='))
-    const filteredVersions: string[] = []
-    let isInPreRelease = layuiVersions[0].includes('-')
-    for (const v of layuiVersions) {
-      if (v.includes('-')) {
-        if (isInPreRelease) {
-          filteredVersions.push(v)
-        }
-      } else {
-        filteredVersions.push(v)
-        isInPreRelease = false
-      }
-      if (filteredVersions.length >= 20) {
-        break
-      }
-    }
-    return filteredVersions;
-  }
   )
 }
