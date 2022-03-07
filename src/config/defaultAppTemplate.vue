@@ -7,5 +7,4 @@ const msg = ref('Hello World!')
 <template>
   <h1>{{ msg }}</h1>
   <lay-input v-model="msg" style="width:350px" />
-  <!-- <el-input v-model="msg" style="width:350px" /> -->
 </template>

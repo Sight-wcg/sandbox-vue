@@ -22,7 +22,7 @@ export interface Dependency {
 }
 
 /**
- * 支持以下组件库,需要全量 ESM 构建包
+ * 目前支持以下组件库,需要全量 ESM 构建包
  * @layui/layui-vue
  * element-plus
  * vant
