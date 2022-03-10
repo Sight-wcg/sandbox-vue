@@ -1,6 +1,6 @@
-# [sandbox-vue](https://layui-vue.gitee.io/layui-vue-playground)
+# [sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
 
-一个 Vue3 SFC 沙盒。[sandbox-vue](https://layui-vue.gitee.io/layui-vue-playground)
+一个 Vue3 SFC 沙盒。[sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
 
 ### 快速开始
 
