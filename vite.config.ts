@@ -9,7 +9,7 @@ import Inspect from 'vite-plugin-inspect'
 import Mkcert from 'vite-plugin-mkcert'
 import { getPackageInfo } from 'local-pkg'
 import pkg from './package.json'
-import { LayuiVueResolver } from './src/utils/layui-vue'
+import { LayuiVueResolver } from 'unplugin-vue-components/resolvers'
 
 const pathSrc = path.resolve(__dirname, 'src')
 
