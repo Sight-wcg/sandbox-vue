@@ -8,19 +8,19 @@ import {
   getSupportedVersions,
   getSupportedVueVersions,
 } from '../utils/dependency'
-import type { ComputedRef } from 'vue'
-import type { ReplStore, VersionKey } from '../store'
 import { preferSFC, UIPackage } from '../store'
 import { downloadProject } from '../download/download'
 import { config } from '../config/sandbox.config'
+import type { ReplStore, VersionKey } from '../store'
+import type { ComputedRef } from 'vue'
 
 const appVersion = import.meta.env.APP_VERSION
 const replVersion = import.meta.env.REPL_VERSION
 
 document.title = config.title
 
-const { store,} = defineProps<{
-  store: ReplStore,
+const { store } = defineProps<{
+  store: ReplStore
 }>()
 
 const versions = reactive<
@@ -35,7 +35,11 @@ const versions = reactive<
 >({
   UILib: {
     text: `${UIPackage.value}`,
-    published: getSupportedVersions(UIPackage.value, config.minSupportedVersion, config.filterPreRelease),
+    published: getSupportedVersions(
+      UIPackage.value,
+      config.minSupportedVersion,
+      config.filterPreRelease
+    ),
     active: store.versions.UILib,
   },
   vue: {
@@ -46,7 +50,7 @@ const versions = reactive<
 })
 
 async function setVersion(key: VersionKey, v: string) {
-  layer.load(2, {}, () => { })
+  layer.load(2, {}, () => {})
   versions[key].active = `loading...`
   await store.setVersion(key, v)
   versions[key].active = v
@@ -76,62 +80,71 @@ async function copyLink() {
   } else {
     let inputEl = document.createElement('input')
     inputEl.value = location.href
-    document.body.appendChild(inputEl)
+    document.body.append(inputEl)
     inputEl.select() // 选择对象;
     document.execCommand('Copy') // 执行浏览器复制命令
     inputEl.remove()
     successful = true
   }
   if (successful) {
-    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => { })
+    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => {})
   } else {
-    layer.msg('分享失败', { time: 1000 }, () => { })
+    layer.msg('分享失败', { time: 1000 }, () => {})
   }
   //alert('Sharable URL has been copied to clipboard.')
 }
 
 async function downloadExample() {
-  layer.confirm("下载项目文件?", {
-    title: '消息',
-    icon: 3,
-    btn: [{
-      text: '确定',
-      async callback() {
-        await downloadProject(store)
-        layer.closeAll()
-      }
-    }, {
-      text: '取消',
-      callback() {
-        layer.closeAll()
-      }
-    }
-    ]
-  },
-    () => { })
+  layer.confirm(
+    '下载项目文件?',
+    {
+      title: '消息',
+      icon: 3,
+      btn: [
+        {
+          text: '确定',
+          async callback() {
+            await downloadProject(store)
+            layer.closeAll()
+          },
+        },
+        {
+          text: '取消',
+          callback() {
+            layer.closeAll()
+          },
+        },
+      ],
+    },
+    () => {}
+  )
 }
 
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 const { isFullscreen, toggle } = useFullscreen()
 
 const UILibActiveRef = ref(versions.UILib.published[0])
 const vueActiveRef = ref(versions.vue.published[0])
+const activeLibRef = ref(preferSFC.value ? 'layuivue' : 'layui')
 
-watch(() => [versions.UILib.published, versions.vue.published], () => {
-  UILibActiveRef.value = versions.UILib.published[0]
-  vueActiveRef.value = versions.vue.published[0]
-})
+watch(
+  () => [versions.UILib.published, versions.vue.published],
+  () => {
+    UILibActiveRef.value = versions.UILib.published[0]
+    vueActiveRef.value = versions.vue.published[0]
+  }
+)
 
 const toggleLib = () => {
-  let layuiPlaygroundUrl = window.location.origin
-  + window.location.pathname
-  + (window.location.search.includes('deps=layui') ? '' : '?deps=layui')
-  
+  let layuiPlaygroundUrl =
+    window.location.origin +
+    window.location.pathname +
+    (window.location.search.includes('deps=layui') ? '' : '?deps=layui')
+
   window.location.href = layuiPlaygroundUrl
 }
-
 </script>
 
 <template>
@@ -146,10 +159,6 @@ const toggleLib = () => {
 
     <!-- 版本选择 -->
     <div class="links">
-      <button class="button" @click="toggleLib()">
-        <span>{{ UIPackage === 'layui' ? 'Layui' : 'LayuiVue' }}</span>
-      </button>
-
       <!-- <div v-for="(v, key) of versions" :key="key" class="flex items-center lt-lg-hidden">
         <span class="mr-1" style="margin-left: 15px;">{{ v.text }} :</span>
         <select v-model="v.active" @change="setVersion(key, v.active)" style="width: 150px">
@@ -159,29 +168,69 @@ const toggleLib = () => {
       </div> -->
 
       <div class="flex items-center lt-lg-hidden">
-        <div>
-        <span class="mr-1" style="margin-left: 15px;">{{ versions.UILib.text }} :</span>
-        <select v-model="UILibActiveRef" @change="setVersion('UILib', UILibActiveRef)" style="width: 150px">
-          <option v-for="(ver) of versions.UILib.published" :value="ver" :key="ver">{{ ver }}</option>
+        <select
+          v-model="activeLibRef"
+          style="border: none"
+          @change="toggleLib()"
+        >
+          <option value="layuivue">LayuiVue</option>
+          <option value="layui">Layui</option>
         </select>
+        <div>
+          <span class="mr-1" style="margin-left: 15px"
+            >{{ versions.UILib.text }} :</span
+          >
+          <select
+            v-model="UILibActiveRef"
+            style="width: 150px"
+            @change="setVersion('UILib', UILibActiveRef)"
+          >
+            <option
+              v-for="ver of versions.UILib.published"
+              :key="ver"
+              :value="ver"
+            >
+              {{ ver }}
+            </option>
+          </select>
         </div>
         <div v-if="preferSFC">
-        <span class="mr-1" style="margin-left: 15px;">{{ versions.vue.text }} :</span>
-        <select v-model="vueActiveRef" @change="setVersion('vue', vueActiveRef)" style="width: 150px">
-          <option v-for="(ver) of versions.vue.published" :value="ver" :key="ver">{{ ver }}</option>
-        </select>
+          <span class="mr-1" style="margin-left: 15px"
+            >{{ versions.vue.text }} :</span
+          >
+          <select
+            v-model="vueActiveRef"
+            style="width: 150px"
+            @change="setVersion('vue', vueActiveRef)"
+          >
+            <option
+              v-for="ver of versions.vue.published"
+              :key="ver"
+              :value="ver"
+            >
+              {{ ver }}
+            </option>
+          </select>
         </div>
       </div>
 
       <button title="Fullscreen" class="fullscreen" @click="toggle">
         <LayIcon
           size="18px"
-          :type="(isFullscreen ? 'layui-icon-screen-restore' : 'layui-icon-screen-full')"
-          style="font-weight:500"
+          :type="
+            isFullscreen
+              ? 'layui-icon-screen-restore'
+              : 'layui-icon-screen-full'
+          "
+          style="font-weight: 500"
         />
       </button>
 
-      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
+      <button
+        title="Toggle dark mode"
+        class="toggle-dark"
+        @click="toggleDark()"
+      >
         <Sun class="light" />
         <Moon class="dark" />
       </button>
@@ -190,7 +239,12 @@ const toggleLib = () => {
         <share />
       </button>
 
-      <button v-if="preferSFC" title="Download" class="download" @click="downloadExample()">
+      <button
+        v-if="preferSFC"
+        title="Download"
+        class="download"
+        @click="downloadExample()"
+      >
         <Download />
       </button>
 
@@ -238,7 +292,7 @@ h1 {
   font-weight: 300;
   display: inline-block;
   vertical-align: middle;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", Tahoma, Arial,
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', Tahoma, Arial,
     sans-serif;
 }
 
@@ -276,7 +330,7 @@ h1 img {
 }
 
 .active-version:after {
-  content: "";
+  content: '';
   width: 0;
   height: 0;
   border-left: 4px solid transparent;
@@ -368,7 +422,7 @@ nav .button {
   border: none;
   outline: none;
   color: #fff;
-  margin: .5rem 0;
+  margin: 0.5rem 0;
   border-bottom: 2px solid var(--nav-button);
   text-shadow: 1px 1px 1px var(--nav-button);
   border-radius: 4px;

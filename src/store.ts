@@ -2,25 +2,31 @@ import { reactive, watchEffect } from 'vue'
 import { compileFile, File } from '@vue/repl'
 import { genImportMap, genLink, genVueLink } from './utils/dependency'
 import { utoa, atou } from './utils/encode'
-import type { Store, SFCOptions, StoreState, OutputModes } from '@vue/repl'
-
 import { config } from './config/sandbox.config'
+import type { Store, SFCOptions, StoreState, OutputModes } from '@vue/repl'
 
 export type VersionKey = 'vue' | 'UILib'
 export type Versions = Record<VersionKey, string>
 
-export const preferSFC = ref(true);
+export const preferSFC = ref(true)
 export const UIPackage = ref<string>(config.UIPackage)
 export const defaultHTMLFile = 'index.html'
 export const defaultMainFile = 'PlaygroundMain.vue'
 export const defaultAppFile = 'App.vue'
-export const LIB_INSTALL_FILE =  preferSFC.value ? 'LibInstall.js' : UIPackage.value + ".js"
+export const libInstallFile = ref<string>('LibInstall.js')
+
+// FIXME 临时的兼容方法
+if (window.location.search.includes('deps=layui')) {
+  preferSFC.value = false
+  UIPackage.value = 'layui'
+  libInstallFile.value = `${UIPackage.value}.js`
+}
 
 // PlaygroundMain.vue
 const mainCode = `
 <script setup>
 import App from './App.vue'
-import { setupLib } from './${LIB_INSTALL_FILE}'
+import { setupLib } from './${libInstallFile.value}'
 setupLib()
 </script>
 <template>
@@ -28,7 +34,9 @@ setupLib()
 </template>`.trim()
 
 // App.vue
-const defaultAppFileTemplate = config.defaultAppTemplate ?? `
+const defaultAppFileTemplate =
+  config.defaultAppTemplate ??
+  `
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -42,8 +50,9 @@ const msg = ref('Hello World!')
 `.trim()
 
 // 全量引入 layui
-const LibInstallFileCode = (version: string) => preferSFC.value 
-? `
+const LibInstallFileCode = (version: string) =>
+  preferSFC.value
+    ? `
 import { getCurrentInstance } from 'vue'
 import UILibName from '${UIPackage.value}'
 
@@ -73,8 +82,8 @@ export function loadStyle() {
     document.head.appendChild(style)
   })
 }
-` 
-: `
+`
+    : `
 await loadStyle()
 await loadLib()
 
@@ -95,10 +104,8 @@ export function loadStyle() {
 }
 
 export function loadLib() {
-  const $libID = document.querySelector('#lib-id')
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.id = "lib-id"
   	script.src = '${genLink(UIPackage.value, version)}'
     script.onload = resolve
     script.onerror = reject
@@ -106,13 +113,13 @@ export function loadLib() {
   })
 }
 `
-
+// index.html
 const defaultHTMLFileCode = `
 <div>
   <button type="button" class="layui-btn">默认按钮</button>
 </div>
 <script type='module'>
-import './${LIB_INSTALL_FILE}'
+import './${libInstallFile.value}'
 
 const { layer } = layui
 
@@ -130,7 +137,8 @@ export class ReplStore implements Store {
   initialShowOutput = false
   initialOutputMode: OutputModes = 'preview'
 
-  private pendingCompiler: Promise<typeof import('vue/compiler-sfc')> | null = null
+  private pendingCompiler: Promise<typeof import('vue/compiler-sfc')> | null =
+    null
 
   // 默认不设置版本
   constructor({
@@ -141,32 +149,30 @@ export class ReplStore implements Store {
     versions?: Versions
   }) {
     let files: StoreState['files'] = {}
-    // FIXME 临时的兼容方法
-    if(window.location.search.includes("deps=layui")){
-      preferSFC.value = false
-      UIPackage.value = "layui"
-    }
-    
+
     if (serializedState) {
       const saved = JSON.parse(atou(serializedState))
       for (const filename of Object.keys(saved)) {
         files[filename] = new File(filename, saved[filename])
       }
+    } else if (preferSFC.value) {
+      files[defaultAppFile] = new File(defaultAppFile, defaultAppFileTemplate)
     } else {
-      if(preferSFC.value){
-        files[defaultAppFile] = new File(defaultAppFile, defaultAppFileTemplate)
-      }else{
-        files[defaultHTMLFile] = new File(defaultHTMLFile, defaultHTMLFileCode.trim())
-      }  
+      files[defaultHTMLFile] = new File(
+        defaultHTMLFile,
+        defaultHTMLFileCode.trim()
+      )
     }
 
-    if(preferSFC.value){
+    if (preferSFC.value) {
       files[defaultMainFile] = new File(defaultMainFile, mainCode, isHidden)
     }
     this.state = reactive({
       mainFile: preferSFC.value ? defaultMainFile : defaultHTMLFile,
       files,
-      activeFile: preferSFC.value ? files[defaultAppFile] : files[defaultHTMLFile],
+      activeFile: preferSFC.value
+        ? files[defaultAppFile]
+        : files[defaultHTMLFile],
       errors: [],
       vueRuntimeURL: '',
     })
@@ -177,8 +183,8 @@ export class ReplStore implements Store {
 
   async init() {
     await this.setVueVersion(this.versions.vue)
-    this.state.files[LIB_INSTALL_FILE] = new File(
-      LIB_INSTALL_FILE,
+    this.state.files[libInstallFile.value] = new File(
+      libInstallFile.value,
       LibInstallFileCode('').trim(),
       isHidden
     )
@@ -206,15 +212,19 @@ export class ReplStore implements Store {
   }
 
   deleteFile(filename: string) {
-    if (filename === LIB_INSTALL_FILE || filename === defaultMainFile || filename === defaultHTMLFile) {
+    if (
+      filename === libInstallFile.value ||
+      filename === defaultMainFile ||
+      filename === defaultHTMLFile
+    ) {
       alert(`You cannot remove it, because ${UIPackage.value} requires it.`)
       return
     }
     if (confirm(`Are you sure you want to delete ${filename}?`)) {
       if (this.state.activeFile.filename === filename) {
-        if(preferSFC.value){
+        if (preferSFC.value) {
           this.setActive(defaultAppFile)
-        }else{
+        } else {
           this.setActive(defaultHTMLFile)
         }
       }
@@ -245,7 +255,7 @@ export class ReplStore implements Store {
             try {
               const importMap = this.simplifyImportMaps()
               return [file, importMap]
-            } catch { }
+            } catch {}
           }
           return [file, content]
         })
@@ -315,7 +325,8 @@ export class ReplStore implements Store {
   }
 
   async setUILibVersion(version: string) {
-    this.state.files[LIB_INSTALL_FILE].code = LibInstallFileCode(version).trim() // 更新版本重新编译所有文件
+    this.state.files[libInstallFile.value].code =
+      LibInstallFileCode(version).trim() // 更新版本重新编译所有文件
     for (const file of Object.values(this.state.files)) {
       compileFile(this, file)
     }
@@ -323,7 +334,9 @@ export class ReplStore implements Store {
     this.addDeps()
 
     // eslint-disable-next-line no-console
-    console.info(`[${UIPackage.value}/playground] Now using ${UIPackage.value} version: ${version}`)
+    console.info(
+      `[${UIPackage.value}/playground] Now using ${UIPackage.value} version: ${version}`
+    )
   }
 
   async setVueVersion(version: string) {
