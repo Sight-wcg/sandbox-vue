@@ -8,15 +8,15 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Inspect from 'vite-plugin-inspect'
 import Mkcert from 'vite-plugin-mkcert'
 import { getPackageInfo } from 'local-pkg'
-import pkg from './package.json'
 import { LayuiVueResolver } from 'unplugin-vue-components/resolvers'
+import pkg from './package.json'
 
 const pathSrc = path.resolve(__dirname, 'src')
 
 export default defineConfig(async () => {
   const repl = await getPackageInfo('@vue/repl')
   return {
-    base:"/sandbox-vue/",
+    base: '/sandbox-vue/',
     resolve: {
       alias: {
         '@': pathSrc,
@@ -33,22 +33,18 @@ export default defineConfig(async () => {
     plugins: [
       vue({
         //reactivityTransform: `${pathSrc}/**/*`,
-        reactivityTransform: true
+        reactivityTransform: true,
       }),
       AutoImport({
         // 自动导入 vue vueUse 相关函数
         imports: ['vue', '@vueuse/core'],
         // 自动导入 layer-vue 相关函数
-        resolvers: [
-           LayuiVueResolver()
-        ],
+        resolvers: [LayuiVueResolver()],
         dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
       }),
       Components({
         // 自动解析 layui-vue 组件
-        resolvers: [
-           LayuiVueResolver({ resolveIcons: true })
-        ],
+        resolvers: [LayuiVueResolver({ resolveIcons: true })],
       }),
       Unocss({
         presets: [presetUno()],

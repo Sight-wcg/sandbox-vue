@@ -1,24 +1,24 @@
 import defaultAppTemplate from './defaultAppTemplate.vue?raw'
 export interface DependencySource {
   // 依赖源名称
-  name: string;
+  name: string
   // 依赖源链接
-  url: string;
+  url: string
 }
 
 export interface Dependency {
   // 包名
-  name: string;
+  name: string
   // 描述
-  description?: string;
+  description?: string
   // 版本
-  version?: string;
+  version?: string
   // 路径
-  path: string;
+  path: string
   // 样式路径
-  stylePath?: string;
+  stylePath?: string
   // 依赖源
-  source?: DependencySource["name"];
+  source?: DependencySource['name']
 }
 
 /**
@@ -44,7 +44,7 @@ export const config = {
   //UIPackage: '@arco-design/web-vue',
   minSupportedVersion: '0.2.5',
   filterPreRelease: false,
-  defaultAppTemplate: defaultAppTemplate.trim()
+  defaultAppTemplate: defaultAppTemplate.trim(),
 }
 
 export const dependencySources: DependencySource[] = [
@@ -64,7 +64,6 @@ export const dependencySources: DependencySource[] = [
     name: 'custom',
     url: 'import.meta.env.BASE_URL' + 'lib',
   },
-
 ]
 
 export const dependencies: Dependency[] = [
@@ -115,7 +114,7 @@ export const dependencies: Dependency[] = [
     stylePath: '/dist/css/layui.css',
     description: 'layui 组件库',
     source: 'unpkg',
-  }
+  },
 
   // {
   //   name: 'element-plus',

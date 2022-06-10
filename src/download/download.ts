@@ -8,7 +8,6 @@ import config from './template/vite.config.js?raw'
 import readme from './template/README.md?raw'
 import tsconfig from './template/tsconfig.json?raw'
 
-
 export async function downloadProject(store: any) {
   /*   if (!confirm('Download example project files?')) {
       return
@@ -16,7 +15,11 @@ export async function downloadProject(store: any) {
 
   const { default: JSZip } = await import('jszip')
   const zip = new JSZip()
-  const excludeFiles = [defaultMainFile, libInstallFile.value, 'import-map.json']
+  const excludeFiles = [
+    defaultMainFile,
+    libInstallFile.value,
+    'import-map.json',
+  ]
 
   // basic structure
   zip.file('index.html', index)
@@ -24,7 +27,6 @@ export async function downloadProject(store: any) {
   zip.file('tsconfig.json', tsconfig)
   zip.file('vite.config.js', config)
   zip.file('README.md', readme)
-
 
   // project src
   const src = zip.folder('src')!

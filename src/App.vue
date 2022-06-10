@@ -7,7 +7,7 @@ import type { SFCOptions } from '@vue/repl'
 
 const loading = ref(true)
 
-const layerLoadingId = layer.load(2, {}, () => { })
+const layerLoadingId = layer.load(2, {}, () => {})
 
 const repl = ref<HTMLElement | null>(null)
 
@@ -31,14 +31,14 @@ const handleKeydown = (evt: KeyboardEvent) => {
 }
 
 const formatCode = async () => {
-  const [format, parserHtml, parserTypeScript, parserBabel] = await Promise.all(
-    [
+  const [format, parserHtml, parserTypeScript, parserBabel, parserPostcss] =
+    await Promise.all([
       import('prettier/standalone').then((r) => r.format),
       import('prettier/parser-html').then((m) => m.default),
       import('prettier/parser-typescript').then((m) => m.default),
       import('prettier/parser-babel').then((m) => m.default),
-    ]
-  )
+      import('prettier/parser-postcss').then((m) => m.default),
+    ])
   const file = store.state.activeFile
   let parser: BuiltInParserName
   if (file.filename.endsWith('.vue')) {
@@ -49,26 +49,25 @@ const formatCode = async () => {
     parser = 'typescript'
   } else if (file.filename.endsWith('.json')) {
     parser = 'json'
-  } else if (file.filename.endsWith('.html')){
+  } else if (file.filename.endsWith('.html')) {
     parser = 'html'
   } else {
     return
   }
   file.code = format(file.code, {
     parser,
-    plugins: [parserHtml, parserTypeScript, parserBabel],
+    plugins: [parserHtml, parserTypeScript, parserBabel, parserPostcss],
     semi: false,
     singleQuote: true,
   })
 }
-
 
 const store = new ReplStore({
   serializedState: location.hash.slice(1),
 })
 store.init().then(() => {
   loading.value = false
-  layer.close(layerLoadingId);
+  layer.close(layerLoadingId)
 })
 
 // persist state
@@ -81,7 +80,7 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
     <Repl
       ref="repl"
       :store="store"
-      :showImportMap="true"
+      :show-import-map="true"
       :show-compile-output="preferSFC"
       auto-resize
       :sfc-options="sfcOptions"
@@ -94,8 +93,8 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
 <style>
 body {
   font-size: 13px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   --base: #444;
   --nav-height: 50px;
