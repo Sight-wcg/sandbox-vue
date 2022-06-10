@@ -2,6 +2,7 @@
 import { Repl } from '@vue/repl'
 import { ReplStore, preferSFC } from './store'
 import Header from './components/Header.vue'
+import type { BuiltInParserName } from 'prettier'
 import type { SFCOptions } from '@vue/repl'
 
 const loading = ref(true)
@@ -16,6 +17,51 @@ const sfcOptions: SFCOptions = {
     reactivityTransform: true,
   },
 }
+
+const handleKeydown = (evt: KeyboardEvent) => {
+  if ((evt.ctrlKey || evt.metaKey) && evt.code === 'KeyS') {
+    evt.preventDefault()
+    return
+  }
+  if ((evt.altKey || evt.ctrlKey) && evt.shiftKey && evt.code === 'KeyF') {
+    evt.preventDefault()
+    formatCode()
+    return
+  }
+}
+
+const formatCode = async () => {
+  const [format, parserHtml, parserTypeScript, parserBabel] = await Promise.all(
+    [
+      import('prettier/standalone').then((r) => r.format),
+      import('prettier/parser-html').then((m) => m.default),
+      import('prettier/parser-typescript').then((m) => m.default),
+      import('prettier/parser-babel').then((m) => m.default),
+    ]
+  )
+  const file = store.state.activeFile
+  let parser: BuiltInParserName
+  if (file.filename.endsWith('.vue')) {
+    parser = 'vue'
+  } else if (file.filename.endsWith('.js')) {
+    parser = 'babel'
+  } else if (file.filename.endsWith('.ts')) {
+    parser = 'typescript'
+  } else if (file.filename.endsWith('.json')) {
+    parser = 'json'
+  } else if (file.filename.endsWith('.html')){
+    parser = 'html'
+  } else {
+    return
+  }
+  file.code = format(file.code, {
+    parser,
+    plugins: [parserHtml, parserTypeScript, parserBabel],
+    semi: false,
+    singleQuote: true,
+  })
+}
+
 
 const store = new ReplStore({
   serializedState: location.hash.slice(1),
@@ -40,8 +86,7 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
       auto-resize
       :sfc-options="sfcOptions"
       :clear-console="false"
-      @keydown.ctrl.s.prevent
-      @keydown.meta.s.prevent
+      @keydown="handleKeydown"
     />
   </div>
 </template>
