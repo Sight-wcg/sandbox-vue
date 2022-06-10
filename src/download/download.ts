@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { defaultMainFile, LIB_INSTALL_FILE } from '../store'
+import { defaultMainFile, libInstallFile } from '../store'
 
 import index from './template/index.html?raw'
 import main from './template/main.ts?raw'
@@ -16,7 +16,7 @@ export async function downloadProject(store: any) {
 
   const { default: JSZip } = await import('jszip')
   const zip = new JSZip()
-  const excludeFiles = [defaultMainFile, LIB_INSTALL_FILE, 'import-map.json']
+  const excludeFiles = [defaultMainFile, libInstallFile.value, 'import-map.json']
 
   // basic structure
   zip.file('index.html', index)

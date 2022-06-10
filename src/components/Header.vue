@@ -118,6 +118,7 @@ const { isFullscreen, toggle } = useFullscreen()
 
 const UILibActiveRef = ref(versions.UILib.published[0])
 const vueActiveRef = ref(versions.vue.published[0])
+const activeLibRef = ref(preferSFC.value ? "layuivue" : "layui")
 
 watch(() => [versions.UILib.published, versions.vue.published], () => {
   UILibActiveRef.value = versions.UILib.published[0]
@@ -146,10 +147,6 @@ const toggleLib = () => {
 
     <!-- 版本选择 -->
     <div class="links">
-      <button class="button" @click="toggleLib()">
-        <span>{{ UIPackage === 'layui' ? 'Layui' : 'LayuiVue' }}</span>
-      </button>
-
       <!-- <div v-for="(v, key) of versions" :key="key" class="flex items-center lt-lg-hidden">
         <span class="mr-1" style="margin-left: 15px;">{{ v.text }} :</span>
         <select v-model="v.active" @change="setVersion(key, v.active)" style="width: 150px">
@@ -159,6 +156,10 @@ const toggleLib = () => {
       </div> -->
 
       <div class="flex items-center lt-lg-hidden">
+       <select v-model="activeLibRef" @change="toggleLib()" style="border:none;">
+        <option value="layuivue">LayuiVue</option>
+        <option value="layui">Layui</option>
+      </select>
         <div>
         <span class="mr-1" style="margin-left: 15px;">{{ versions.UILib.text }} :</span>
         <select v-model="UILibActiveRef" @change="setVersion('UILib', UILibActiveRef)" style="width: 150px">

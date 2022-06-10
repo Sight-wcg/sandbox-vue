@@ -14,13 +14,20 @@ export const UIPackage = ref<string>(config.UIPackage)
 export const defaultHTMLFile = 'index.html'
 export const defaultMainFile = 'PlaygroundMain.vue'
 export const defaultAppFile = 'App.vue'
-export const LIB_INSTALL_FILE =  preferSFC.value ? 'LibInstall.js' : UIPackage.value + ".js"
+export const libInstallFile =  ref<string>('LibInstall.js')
+
+// FIXME 临时的兼容方法
+if (window.location.search.includes("deps=layui")) {
+  preferSFC.value = false
+  UIPackage.value = "layui"
+  libInstallFile.value = UIPackage.value + '.js'
+}
 
 // PlaygroundMain.vue
 const mainCode = `
 <script setup>
 import App from './App.vue'
-import { setupLib } from './${LIB_INSTALL_FILE}'
+import { setupLib } from './${libInstallFile.value}'
 setupLib()
 </script>
 <template>
@@ -95,10 +102,8 @@ export function loadStyle() {
 }
 
 export function loadLib() {
-  const $libID = document.querySelector('#lib-id')
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.id = "lib-id"
   	script.src = '${genLink(UIPackage.value, version)}'
     script.onload = resolve
     script.onerror = reject
@@ -106,13 +111,13 @@ export function loadLib() {
   })
 }
 `
-
+// index.html
 const defaultHTMLFileCode = `
 <div>
   <button type="button" class="layui-btn">默认按钮</button>
 </div>
 <script type='module'>
-import './${LIB_INSTALL_FILE}'
+import './${libInstallFile.value}'
 
 const { layer } = layui
 
@@ -141,11 +146,6 @@ export class ReplStore implements Store {
     versions?: Versions
   }) {
     let files: StoreState['files'] = {}
-    // FIXME 临时的兼容方法
-    if(window.location.search.includes("deps=layui")){
-      preferSFC.value = false
-      UIPackage.value = "layui"
-    }
     
     if (serializedState) {
       const saved = JSON.parse(atou(serializedState))
@@ -177,8 +177,8 @@ export class ReplStore implements Store {
 
   async init() {
     await this.setVueVersion(this.versions.vue)
-    this.state.files[LIB_INSTALL_FILE] = new File(
-      LIB_INSTALL_FILE,
+    this.state.files[libInstallFile.value] = new File(
+      libInstallFile.value,
       LibInstallFileCode('').trim(),
       isHidden
     )
@@ -206,7 +206,7 @@ export class ReplStore implements Store {
   }
 
   deleteFile(filename: string) {
-    if (filename === LIB_INSTALL_FILE || filename === defaultMainFile || filename === defaultHTMLFile) {
+    if (filename === libInstallFile.value || filename === defaultMainFile || filename === defaultHTMLFile) {
       alert(`You cannot remove it, because ${UIPackage.value} requires it.`)
       return
     }
@@ -315,7 +315,7 @@ export class ReplStore implements Store {
   }
 
   async setUILibVersion(version: string) {
-    this.state.files[LIB_INSTALL_FILE].code = LibInstallFileCode(version).trim() // 更新版本重新编译所有文件
+    this.state.files[libInstallFile.value].code = LibInstallFileCode(version).trim() // 更新版本重新编译所有文件
     for (const file of Object.values(this.state.files)) {
       compileFile(this, file)
     }
