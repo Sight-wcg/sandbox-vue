@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Repl } from '@vue/repl'
-import { ReplStore } from './store'
+import { ReplStore, preferSFC } from './store'
 import Header from './components/Header.vue'
 import type { SFCOptions } from '@vue/repl'
 
@@ -31,11 +31,12 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
 
 <template>
   <div v-if="!loading" class="antialiased">
-    <Header :store="store" :fullscreenTarget="repl" />
+    <Header :store="store" />
     <Repl
       ref="repl"
       :store="store"
-      show-compile-output
+      :showImportMap="true"
+      :show-compile-output="preferSFC"
       auto-resize
       :sfc-options="sfcOptions"
       :clear-console="false"

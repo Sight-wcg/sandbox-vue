@@ -10,6 +10,7 @@ import {
 } from '../utils/dependency'
 import type { ComputedRef } from 'vue'
 import type { ReplStore, VersionKey } from '../store'
+import { preferSFC, UIPackage } from '../store'
 import { downloadProject } from '../download/download'
 import { config } from '../config/sandbox.config'
 
@@ -18,9 +19,8 @@ const replVersion = import.meta.env.REPL_VERSION
 
 document.title = config.title
 
-const { store, fullscreenTarget } = defineProps<{
+const { store,} = defineProps<{
   store: ReplStore,
-  fullscreenTarget: any
 }>()
 
 const versions = reactive<
@@ -34,8 +34,8 @@ const versions = reactive<
   >
 >({
   UILib: {
-    text: `${config.UIPackage}`,
-    published: getSupportedVersions(config.UIPackage, config.minSupportedVersion, config.filterPreRelease),
+    text: `${UIPackage.value}`,
+    published: getSupportedVersions(UIPackage.value, config.minSupportedVersion, config.filterPreRelease),
     active: store.versions.UILib,
   },
   vue: {
@@ -114,7 +114,23 @@ async function downloadExample() {
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 
-const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
+const { isFullscreen, toggle } = useFullscreen()
+
+const UILibActiveRef = ref(versions.UILib.published[0])
+const vueActiveRef = ref(versions.vue.published[0])
+
+watch(() => [versions.UILib.published, versions.vue.published], () => {
+  UILibActiveRef.value = versions.UILib.published[0]
+  vueActiveRef.value = versions.vue.published[0]
+})
+
+const toggleLib = () => {
+  let layuiPlaygroundUrl = window.location.origin
+  + window.location.pathname
+  + (window.location.search.includes('deps=layui') ? '' : '?deps=layui')
+  
+  window.location.href = layuiPlaygroundUrl
+}
 
 </script>
 
@@ -130,12 +146,31 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
 
     <!-- 版本选择 -->
     <div class="links">
-      <div v-for="(v, key) of versions" :key="key" class="flex items-center lt-lg-hidden">
+      <button class="button" @click="toggleLib()">
+        <span>{{ UIPackage === 'layui' ? 'Layui' : 'LayuiVue' }}</span>
+      </button>
+
+      <!-- <div v-for="(v, key) of versions" :key="key" class="flex items-center lt-lg-hidden">
         <span class="mr-1" style="margin-left: 15px;">{{ v.text }} :</span>
         <select v-model="v.active" @change="setVersion(key, v.active)" style="width: 150px">
           <option disabled value>请选择</option>
           <option v-for="(ver) of v.published" :value="ver" :key="ver">{{ ver }}</option>
         </select>
+      </div> -->
+
+      <div class="flex items-center lt-lg-hidden">
+        <div>
+        <span class="mr-1" style="margin-left: 15px;">{{ versions.UILib.text }} :</span>
+        <select v-model="UILibActiveRef" @change="setVersion('UILib', UILibActiveRef)" style="width: 150px">
+          <option v-for="(ver) of versions.UILib.published" :value="ver" :key="ver">{{ ver }}</option>
+        </select>
+        </div>
+        <div v-if="preferSFC">
+        <span class="mr-1" style="margin-left: 15px;">{{ versions.vue.text }} :</span>
+        <select v-model="vueActiveRef" @change="setVersion('vue', vueActiveRef)" style="width: 150px">
+          <option v-for="(ver) of versions.vue.published" :value="ver" :key="ver">{{ ver }}</option>
+        </select>
+        </div>
       </div>
 
       <button title="Fullscreen" class="fullscreen" @click="toggle">
@@ -146,7 +181,7 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
         />
       </button>
 
-      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark">
+      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
         <Sun class="light" />
         <Moon class="dark" />
       </button>
@@ -155,7 +190,7 @@ const { isFullscreen, toggle } = useFullscreen(fullscreenTarget)
         <share />
       </button>
 
-      <button title="Download" class="download" @click="downloadExample">
+      <button v-if="preferSFC" title="Download" class="download" @click="downloadExample()">
         <Download />
       </button>
 
@@ -324,5 +359,21 @@ h1 img {
 .download,
 .fullscreen {
   margin: 0 2px;
+}
+
+nav .button {
+  --nav-button: #42b883;
+  padding: 3px 15px;
+  background-color: var(--nav-button);
+  border: none;
+  outline: none;
+  color: #fff;
+  margin: .5rem 0;
+  border-bottom: 2px solid var(--nav-button);
+  text-shadow: 1px 1px 1px var(--nav-button);
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  vertical-align: middle;
 }
 </style>

@@ -31,6 +31,7 @@ export interface Dependency {
  */
 export const config = {
   title: 'sandbox-vue',
+  //UIPackage: 'layui',
   UIPackage: '@layui/layui-vue',
   //UIPackage: 'element-plus',
   //UIPackage: 'vant',
@@ -107,6 +108,14 @@ export const dependencies: Dependency[] = [
     description: 'layer弹层',
     source: 'unpkg',
   },
+  {
+    name: 'layui',
+    version: '',
+    path: '/dist/layui.js',
+    stylePath: '/dist/css/layui.css',
+    description: 'layui 组件库',
+    source: 'unpkg',
+  }
 
   // {
   //   name: 'element-plus',

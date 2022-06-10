@@ -40,7 +40,6 @@ export default defineConfig(async () => {
         imports: ['vue', '@vueuse/core'],
         // 自动导入 layer-vue 相关函数
         resolvers: [
-          // @ts-ignore
            LayuiVueResolver()
         ],
         dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
@@ -48,7 +47,6 @@ export default defineConfig(async () => {
       Components({
         // 自动解析 layui-vue 组件
         resolvers: [
-          // @ts-ignore
            LayuiVueResolver({ resolveIcons: true })
         ],
       }),
