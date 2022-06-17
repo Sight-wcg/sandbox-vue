@@ -20,8 +20,9 @@ const replVersion = import.meta.env.REPL_VERSION
 
 document.title = config.title
 
-const { store } = defineProps<{
+const { store, format: formatCode } = defineProps<{
   store: ReplStore
+  format: Function
 }>()
 
 const versions = reactive<
@@ -121,10 +122,6 @@ async function downloadExample() {
   )
 }
 const vm = getCurrentInstance()
-async function formatCode(){
-  // @ts-ignore
-  await vm?.parent?.proxy.formatCode();
-}
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
