@@ -76,7 +76,7 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
 
 <template>
   <div v-if="!loading" class="antialiased">
-    <Header :store="store" />
+    <Header :store="store" :format="formatCode" />
     <Repl
       ref="repl"
       :store="store"
