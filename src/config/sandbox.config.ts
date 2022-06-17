@@ -43,7 +43,7 @@ export const config = {
   //UIPackage: 'tdesign-vue-next',
   //UIPackage: '@arco-design/web-vue',
   minSupportedVersion: '0.2.5',
-  filterPreRelease: false,
+  filterPreRelease: true,
   defaultAppTemplate: defaultAppTemplate.trim(),
 }
 

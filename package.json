@@ -19,7 +19,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@layui/layui-vue": "1.1.5",
+    "@layui/layui-vue": "1.1.7",
     "@vue/repl": "1.2.4",
     "@vueuse/core": "8.5.0",
     "compare-versions": "4.1.3",

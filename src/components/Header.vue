@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Download from '@/icons/Download.vue'
 import Github from '@/icons/Github.vue'
+import Format from '@/icons/Format.vue'
 import Share from '@/icons/Share.vue'
 import Moon from '@/icons/Moon.vue'
 import Sun from '@/icons/Sun.vue'
@@ -119,6 +120,11 @@ async function downloadExample() {
     () => {}
   )
 }
+const vm = getCurrentInstance()
+async function formatCode(){
+  // @ts-ignore
+  await vm?.parent?.proxy.formatCode();
+}
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -166,71 +172,42 @@ const toggleLib = () => {
           <option v-for="(ver) of v.published" :value="ver" :key="ver">{{ ver }}</option>
         </select>
       </div> -->
-
       <div class="flex items-center lt-lg-hidden">
-        <select
-          v-model="activeLibRef"
-          style="border: none"
-          @change="toggleLib()"
-        >
+        <select v-model="activeLibRef" style="border: none" @change="toggleLib()">
           <option value="layuivue">LayuiVue</option>
           <option value="layui">Layui</option>
         </select>
         <div>
-          <span class="mr-1" style="margin-left: 15px"
-            >{{ versions.UILib.text }} :</span
-          >
-          <select
-            v-model="UILibActiveRef"
-            style="width: 150px"
-            @change="setVersion('UILib', UILibActiveRef)"
-          >
-            <option
-              v-for="ver of versions.UILib.published"
-              :key="ver"
-              :value="ver"
-            >
+          <span class="mr-1" style="margin-left: 15px">{{ versions.UILib.text }} :</span>
+          <select v-model="UILibActiveRef" style="width: 150px" @change="setVersion('UILib', UILibActiveRef)">
+            <option v-for="ver of versions.UILib.published" :key="ver" :value="ver">
               {{ ver }}
             </option>
           </select>
         </div>
         <div v-if="preferSFC">
-          <span class="mr-1" style="margin-left: 15px"
-            >{{ versions.vue.text }} :</span
-          >
-          <select
-            v-model="vueActiveRef"
-            style="width: 150px"
-            @change="setVersion('vue', vueActiveRef)"
-          >
-            <option
-              v-for="ver of versions.vue.published"
-              :key="ver"
-              :value="ver"
-            >
+          <span class="mr-1" style="margin-left: 15px">{{ versions.vue.text }} :</span>
+          <select v-model="vueActiveRef" style="width: 150px" @change="setVersion('vue', vueActiveRef)">
+            <option v-for="ver of versions.vue.published" :key="ver" :value="ver">
               {{ ver }}
             </option>
           </select>
         </div>
       </div>
 
+      <button class="format" title="ctrl + shift + F format" @click="formatCode()">
+        <Format />
+      </button>
+
       <button title="Fullscreen" class="fullscreen" @click="toggle">
-        <LayIcon
-          size="18px"
-          :type="
+        <LayIcon size="18px" :type="
             isFullscreen
               ? 'layui-icon-screen-restore'
               : 'layui-icon-screen-full'
-          "
-          style="font-weight: 500"
-        />
+          " style="font-weight: 500" />
       </button>
 
-      <button
-        title="Toggle dark mode"
-        class="toggle-dark"
-        @click="toggleDark()"
-      >
+      <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
         <Sun class="light" />
         <Moon class="dark" />
       </button>
@@ -239,12 +216,7 @@ const toggleLib = () => {
         <share />
       </button>
 
-      <button
-        v-if="preferSFC"
-        title="Download"
-        class="download"
-        @click="downloadExample()"
-      >
+      <button v-if="preferSFC" title="Download" class="download" @click="downloadExample()">
         <Download />
       </button>
 
@@ -408,6 +380,7 @@ h1 img {
   display: block;
 }
 
+.format
 .share,
 .github,
 .download,
