@@ -1,6 +1,6 @@
 {
   "name": "layui-vue-playground",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "Layui Vue Playground",
   "keywords": [
     "layui",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@layui/layui-vue": "1.1.7",
-    "@vue/repl": "1.2.4",
+    "@vue/repl": "1.3.0",
     "@vueuse/core": "8.5.0",
     "compare-versions": "4.1.3",
     "file-saver": "^2.0.5",
@@ -36,6 +36,7 @@
     "@vitejs/plugin-vue": "2.3.3",
     "eslint": "8.7.0",
     "eslint-define-config": "1.2.3",
+    "fflate": "^0.7.3",
     "local-pkg": "0.4.1",
     "patch-package": "^6.4.7",
     "prettier": "2.6.1",
