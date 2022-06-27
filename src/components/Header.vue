@@ -121,7 +121,6 @@ async function downloadExample() {
     () => {}
   )
 }
-const vm = getCurrentInstance()
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -131,6 +130,10 @@ const { isFullscreen, toggle } = useFullscreen()
 const UILibActiveRef = ref(versions.UILib.published[0])
 const vueActiveRef = ref(versions.vue.published[0])
 const activeLibRef = ref(preferSFC.value ? 'layuivue' : 'layui')
+
+const favicon = computed(() => preferSFC.value ? 'layui-vue.png' : 'layui.svg')
+
+useFavicon(favicon)
 
 watch(
   () => [versions.UILib.published, versions.vue.published],
@@ -153,7 +156,7 @@ const toggleLib = () => {
 <template>
   <nav>
     <h1>
-      <img alt="logo" src="/logo.svg" />
+      <img alt="logo" :src="`/${favicon}`" />
       <span class="lt-sm-hidden">
         <span>{{ config.title }}</span>
         <small>(v{{ appVersion }}, repl v{{ replVersion }})</small>
@@ -198,10 +201,10 @@ const toggleLib = () => {
 
       <button title="Fullscreen" class="fullscreen" @click="toggle">
         <LayIcon size="18px" :type="
-            isFullscreen
-              ? 'layui-icon-screen-restore'
-              : 'layui-icon-screen-full'
-          " style="font-weight: 500" />
+          isFullscreen
+            ? 'layui-icon-screen-restore'
+            : 'layui-icon-screen-full'
+        " style="font-weight: 500" />
       </button>
 
       <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
