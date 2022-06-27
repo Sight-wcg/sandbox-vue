@@ -132,6 +132,7 @@ const vueActiveRef = ref(versions.vue.published[0])
 const activeLibRef = ref(preferSFC.value ? 'layuivue' : 'layui')
 
 const favicon = computed(() => preferSFC.value ? 'layui-vue.png' : 'layui.svg')
+const imgUrl = new URL(`/${favicon.value}`, import.meta.url).href
 
 useFavicon(favicon)
 
@@ -156,7 +157,7 @@ const toggleLib = () => {
 <template>
   <nav>
     <h1>
-      <img alt="logo" :src="`/${favicon}`" />
+      <img alt="logo" :src="imgUrl" />
       <span class="lt-sm-hidden">
         <span>{{ config.title }}</span>
         <small>(v{{ appVersion }}, repl v{{ replVersion }})</small>
