@@ -31,7 +31,7 @@ setupLib()
 </script>
 <template>
   <App />
-</template>`.trim()
+</template>`.trim();
 
 // App.vue
 const defaultAppFileTemplate =
@@ -78,7 +78,7 @@ export function loadStyle() {
 
     const style = document.createElement("style")
     style.type = 'text/css'
-    style.innerHTML = 'body{margin:8px !important;}'
+    style.innerHTML = 'body{padding:8px !important;}'
     document.head.appendChild(style)
   })
 }
