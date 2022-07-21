@@ -15,8 +15,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --max-warnings 0",
     "lint:fix": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --max-warnings 0 --fix",
-    "release": "standard-version",
-    "postinstall": "patch-package"
+    "release": "standard-version"
   },
   "dependencies": {
     "@layui/layui-vue": "1.1.7",
@@ -38,7 +37,6 @@
     "eslint-define-config": "1.2.3",
     "fflate": "^0.7.3",
     "local-pkg": "0.4.1",
-    "patch-package": "^6.4.7",
     "prettier": "2.6.1",
     "standard-version": "9.3.2",
     "typescript": "4.7.2",
@@ -48,5 +46,10 @@
     "vite": "2.9.9",
     "vite-plugin-inspect": "0.5.0",
     "vue-tsc": "0.35.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@vue/repl@1.3.0": "patches/@vue__repl@1.3.0.patch"
+    }
   }
 }
