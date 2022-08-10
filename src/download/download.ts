@@ -25,7 +25,7 @@ export async function downloadProject(store: any) {
   zip.file('index.html', index)
   zip.file('package.json', pkg)
   zip.file('tsconfig.json', tsconfig)
-  zip.file('vite.config.js', config)
+  zip.file('vite.config.ts', config)
   zip.file('README.md', readme)
 
   // project src

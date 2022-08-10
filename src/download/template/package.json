@@ -7,11 +7,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@layui/layui-vue": "^0.3.7",
+    "@layui/layui-vue": "latest",
     "vue": "^3.2.30"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.2.0",
+    "@vitejs/plugin-vue": "^2.3.2",
     "@vue/compiler-sfc": "^3.2.30",
     "typescript": "^4.4.3",
     "less": "^4.1.2",
