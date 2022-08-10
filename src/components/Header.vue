@@ -248,6 +248,10 @@ nav {
   justify-content: space-between;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
 .dark nav {
   --base: #ddd;
   --bg: #363a47;
