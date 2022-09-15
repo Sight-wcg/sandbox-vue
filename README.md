@@ -103,4 +103,4 @@ npm run preview
 
 如果要部署在 `https://<USERNAME>.github.io/<REPO>/` 上，例如仓库地址为` https://github.com/<USERNAME>/<REPO>`，那么需要设置 base 为 `'/<REPO>/'`。
 
-> 本项目受 [Vue SFC Playground](https://sfc.vuejs.org/) 和 [element-plus-playground](https://github.com/element-plus/element-plus-playground) 启发
+> 本项目基于 [element-plus-playground](https://github.com/element-plus/element-plus-playground) 和 [Vue SFC Playground](https://sfc.vuejs.org/)
