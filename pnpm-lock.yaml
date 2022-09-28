@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 patchedDependencies:
   '@vue/repl@1.3.0':
-    hash: kh745sorrjct7wpqiwi3ajjhfe
+    hash: 7jed4pkldfrqx2gutceloj3l6m
     path: patches/@vue__repl@1.3.0.patch
 
 specifiers:
@@ -35,7 +35,7 @@ specifiers:
 
 dependencies:
   '@layui/layui-vue': 1.1.7_vue@3.2.36
-  '@vue/repl': 1.3.0_kh745sorrjct7wpqiwi3ajjhfe_vue@3.2.36
+  '@vue/repl': 1.3.0_7jed4pkldfrqx2gutceloj3l6m_vue@3.2.36
   '@vueuse/core': 8.5.0_vue@3.2.36
   compare-versions: registry.npmmirror.com/compare-versions/4.1.3
   file-saver: registry.npmmirror.com/file-saver/2.0.5
@@ -558,7 +558,7 @@ packages:
     dependencies:
       '@vue/shared': 3.2.36
 
-  /@vue/repl/1.3.0_kh745sorrjct7wpqiwi3ajjhfe_vue@3.2.36:
+  /@vue/repl/1.3.0_7jed4pkldfrqx2gutceloj3l6m_vue@3.2.36:
     resolution: {integrity: sha512-L2Jr9+M6z2+gW6i5ZuUXwCMfXtyHDSSyw4fViL0QezXLLOctqTw+o6sYUsgvErkreb9oI0kcZPpWkkW7lGeuiA==}
     peerDependencies:
       vue: ^3.2.13
