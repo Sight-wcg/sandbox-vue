@@ -1,53 +1,49 @@
-# 该 workflow 的名称，可以随意填写
-name: Deploy To Github Pages
+name: Github Pages
 
-# workflow的触发事件，这里代表 master 分支的 push 事件触发
 on:
   push:
     branches: 
       - master
 
-# 任务
 jobs:
-  # deploy 为任务 ID
   deploy:
-    # 运行所需环境
     runs-on: ubuntu-latest 
     steps:
-      # 步骤名
       - name: Git checkout
-        # 使用的actions脚本，这里是官方提供的获取源码脚本
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v3
 
-      # 安装 Node.js
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      # 安装 pnpm
+      - name: Cache ~/.pnpm-store
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-pnpm-store
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ matrix.node-version }}-test-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-${{ matrix.node-version }}-test-
+            ${{ runner.os }}-
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
 
-      # 安装依赖
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm i --frozen-lockfile
 
-      # 构建
       - name: Build
         run: pnpm build
 
-      # 部署
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          # 操作repo 需要密钥
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # 要发布的文件夹
+          github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: ./dist
-          # 发布到的分支
-          publish_branch: page
-          # 仅使用最新提交创建发布分支
+          publish_branch: gh-pages
           force_orphan: true
