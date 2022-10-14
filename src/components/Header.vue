@@ -25,6 +25,10 @@ const { store, format: formatCode } = defineProps<{
   format: Function
 }>()
 
+const emits = defineEmits<{
+  (e: 'changeTheme', isDark: boolean): void;
+}>()
+
 const versions = reactive<
   Record<
     VersionKey,
@@ -124,6 +128,10 @@ async function downloadExample() {
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+
+watch(isDark, (newVal) => {
+  emits('changeTheme', isDark.value)
+})
 
 const { isFullscreen, toggle } = useFullscreen()
 

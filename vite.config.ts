@@ -14,12 +14,13 @@ import pkg from './package.json'
 const pathSrc = path.resolve(__dirname, 'src')
 
 export default defineConfig(async () => {
-  const repl = await getPackageInfo('@vue/repl')
+  const repl = await getPackageInfo('vue-repl-sight')
   return {
     base: '/sandbox-vue/',
     resolve: {
       alias: {
         '@': pathSrc,
+        '@vue/repl': 'vue-repl-sight'
       },
     },
     define: {
@@ -29,6 +30,9 @@ export default defineConfig(async () => {
     server: {
       https: true,
       host: true,
+    },
+    worker: {
+      format: 'es'
     },
     plugins: [
       vue({

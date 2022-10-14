@@ -72,11 +72,20 @@ store.init().then(() => {
 
 // persist state
 watchEffect(() => history.replaceState({}, '', store.serialize()))
+ // BuiltinTheme = 'vs' | 'vs-dark' | 'hc-black' | 'hc-light'; 'monaco-volar= 'vs-code-theme-converted'
+const replTheme = ref('vs')
+const onChangeTheme = (isDark: boolean) => {
+  if(isDark){
+    replTheme.value = 'vs-code-theme-converted'
+  }else{
+    replTheme.value = 'vs'
+  }
+}
 </script>
 
 <template>
   <div v-if="!loading" class="antialiased">
-    <Header :store="store" :format="formatCode" />
+    <Header :store="store" :format="formatCode" @change-theme="onChangeTheme" />
     <Repl
       ref="repl"
       :store="store"
@@ -86,6 +95,7 @@ watchEffect(() => history.replaceState({}, '', store.serialize()))
       :sfc-options="sfcOptions"
       :clear-console="false"
       @keydown="handleKeydown"
+      :theme="replTheme"
     />
   </div>
 </template>

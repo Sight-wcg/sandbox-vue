@@ -34,6 +34,7 @@ declare global {
   const isDefined: typeof import('@vueuse/core')['isDefined']
   const isReadonly: typeof import('vue')['isReadonly']
   const isRef: typeof import('vue')['isRef']
+  const layer: typeof import('@layui/layer-vue')['layer']
   const logicAnd: typeof import('@vueuse/core')['logicAnd']
   const logicNot: typeof import('@vueuse/core')['logicNot']
   const logicOr: typeof import('@vueuse/core')['logicOr']
