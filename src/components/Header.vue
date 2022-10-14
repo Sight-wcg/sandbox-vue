@@ -131,6 +131,8 @@ const toggleDark = useToggle(isDark)
 
 watch(isDark, (newVal) => {
   emits('changeTheme', isDark.value)
+},{
+  immediate:true
 })
 
 const { isFullscreen, toggle } = useFullscreen()

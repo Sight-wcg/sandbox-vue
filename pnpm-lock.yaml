@@ -25,7 +25,7 @@ specifiers:
   vite-plugin-inspect: 0.5.0
   vite-plugin-mkcert: ^1.6.4
   vue: 3.2.36
-  vue-repl-sight: 1.3.4
+  vue-repl-sight: 1.3.5
   vue-tsc: 0.35.0
 
 dependencies:
@@ -36,7 +36,7 @@ dependencies:
   jszip: 3.10.0
   vite-plugin-mkcert: 1.6.4
   vue: 3.2.36
-  vue-repl-sight: 1.3.4_vue@3.2.36
+  vue-repl-sight: 1.3.5_vue@3.2.36
 
 devDependencies:
   '@sxzz/eslint-config-prettier': registry.npmmirror.com/@sxzz/eslint-config-prettier/1.6.1_eslint@8.7.0
@@ -1796,8 +1796,8 @@ packages:
       vue: 3.2.36
     dev: false
 
-  /vue-repl-sight/1.3.4_vue@3.2.36:
-    resolution: {integrity: sha512-I3BFdMZlyhmdxKsnfSOmb61E6KhJBtUo7kYikB4ZU/KIrn6qAHC/SNNGyEB/m/WJkACnOgcq40P/j/V3kHs2Rg==}
+  /vue-repl-sight/1.3.5_vue@3.2.36:
+    resolution: {integrity: sha512-vsCXcFNhNcg7kLojt8z7FbSDXNWsfMqMf1l1KJKQHdj1OFMGdtdufL209FfFyhVdE6SfTwtn1mzMxvqRIO3jFg==}
     peerDependencies:
       vue: ^3.2.13
     dependencies:
