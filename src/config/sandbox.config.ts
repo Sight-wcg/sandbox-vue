@@ -60,10 +60,10 @@ export const dependencySources: DependencySource[] = [
     name: 'skypack',
     url: 'https://cdn.skypack.dev/',
   },
-  {
-    name: 'custom',
-    url: 'import.meta.env.BASE_URL' + 'lib',
-  },
+  // {
+  //   name: 'custom',
+  //   url: 'import.meta.env.BASE_URL' + 'lib',
+  // },
 ]
 
 export const dependencies: Dependency[] = [
