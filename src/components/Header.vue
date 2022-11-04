@@ -7,6 +7,7 @@ import Moon from '@/icons/Moon.vue'
 import Sun from '@/icons/Sun.vue'
 import FullScreen from '@/icons/FullScreen.vue'
 import ExitFullScreen from '@/icons/ExitFullScreen.vue'
+import Prettier from '@/icons/Prettier.vue'
 import {
   getSupportedVersions,
   getSupportedVueVersions,
@@ -204,18 +205,13 @@ const toggleLib = () => {
         </div>
       </div>
 
-      <button class="format" title="ctrl + shift + F format" @click="formatCode()">
-        <Format />
+      <button class="format" title="ctrl + shift + F" @click="formatCode()">
+        <Prettier />
       </button>
 
       
 
       <button title="Fullscreen" class="fullscreen" @click="toggle">
-        <!-- <LayIcon size="18px" :type="
-          isFullscreen
-            ? 'layui-icon-screen-restore'
-            : 'layui-icon-screen-full'
-        " style="font-weight: 500" /> -->
         <ExitFullScreen v-if="isFullscreen"></ExitFullScreen>
         <FullScreen v-else></FullScreen>
         
