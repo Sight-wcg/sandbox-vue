@@ -57,7 +57,7 @@ export default defineConfig(async () => {
       Mkcert(),
       Inspect(),
       Compression({
-        deleteOriginFile: true
+        deleteOriginFile: false
       }),
     ],
   }
