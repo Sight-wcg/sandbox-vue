@@ -9,9 +9,9 @@ import readme from './template/README.md?raw'
 import tsconfig from './template/tsconfig.json?raw'
 
 export async function downloadProject(store: any) {
-  /*   if (!confirm('Download example project files?')) {
-      return
-    } */
+  if (!confirm('Download example project files?')) {
+    return
+  } 
 
   const { default: JSZip } = await import('jszip')
   const zip = new JSZip()

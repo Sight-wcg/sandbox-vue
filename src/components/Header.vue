@@ -5,6 +5,8 @@ import Format from '@/icons/Format.vue'
 import Share from '@/icons/Share.vue'
 import Moon from '@/icons/Moon.vue'
 import Sun from '@/icons/Sun.vue'
+import FullScreen from '@/icons/FullScreen.vue'
+import ExitFullScreen from '@/icons/ExitFullScreen.vue'
 import {
   getSupportedVersions,
   getSupportedVueVersions,
@@ -56,25 +58,23 @@ const versions = reactive<
 })
 
 async function setVersion(key: VersionKey, v: string) {
-  layer.load(2, {}, () => {})
   versions[key].active = `loading...`
   await store.setVersion(key, v)
   versions[key].active = v
-  layer.closeAll()
 }
 
-async function onShare() {
-  const { share, isSupported } = useShare()
-  if (isSupported) {
-    share({
-      title: `${config.title}`,
-      text: `来自 ${config.title} 的分享!`,
-      url: location.href,
-    })
-  } else {
-    copyLink()
-  }
-}
+// async function onShare() {
+//   const { share, isSupported } = useShare()
+//   if (isSupported) {
+//     share({
+//       title: `${config.title}`,
+//       text: `来自 ${config.title} 的分享!`,
+//       url: location.href,
+//     })
+//   } else {
+//     copyLink()
+//   }
+// }
 
 async function copyLink() {
   const { isSupported, copy } = useClipboard()
@@ -87,44 +87,43 @@ async function copyLink() {
     let inputEl = document.createElement('input')
     inputEl.value = location.href
     document.body.append(inputEl)
-    inputEl.select() // 选择对象;
-    document.execCommand('Copy') // 执行浏览器复制命令
+    inputEl.select() 
+    document.execCommand('Copy') 
     inputEl.remove()
     successful = true
   }
   if (successful) {
-    layer.msg('链接已复制到剪贴板', { time: 1000 }, () => {})
+    alert('Sharable URL has been copied to clipboard.')
   } else {
-    layer.msg('分享失败', { time: 1000 }, () => {})
+    alert('copy failed!')
   }
-  //alert('Sharable URL has been copied to clipboard.')
 }
 
-async function downloadExample() {
-  layer.confirm(
-    '下载项目文件?',
-    {
-      title: '消息',
-      icon: 3,
-      btn: [
-        {
-          text: '确定',
-          async callback() {
-            await downloadProject(store)
-            layer.closeAll()
-          },
-        },
-        {
-          text: '取消',
-          callback() {
-            layer.closeAll()
-          },
-        },
-      ],
-    },
-    () => {}
-  )
-}
+// async function downloadExample() {
+//   layer.confirm(
+//     '下载项目文件?',
+//     {
+//       title: '消息',
+//       icon: 3,
+//       btn: [
+//         {
+//           text: '确定',
+//           async callback() {
+//             await downloadProject(store)
+//             layer.closeAll()
+//           },
+//         },
+//         {
+//           text: '取消',
+//           callback() {
+//             layer.closeAll()
+//           },
+//         },
+//       ],
+//     },
+//     () => {}
+//   )
+// }
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -209,12 +208,17 @@ const toggleLib = () => {
         <Format />
       </button>
 
+      
+
       <button title="Fullscreen" class="fullscreen" @click="toggle">
-        <LayIcon size="18px" :type="
+        <!-- <LayIcon size="18px" :type="
           isFullscreen
             ? 'layui-icon-screen-restore'
             : 'layui-icon-screen-full'
-        " style="font-weight: 500" />
+        " style="font-weight: 500" /> -->
+        <ExitFullScreen v-if="isFullscreen"></ExitFullScreen>
+        <FullScreen v-else></FullScreen>
+        
       </button>
 
       <button title="Toggle dark mode" class="toggle-dark" @click="toggleDark()">
@@ -222,11 +226,11 @@ const toggleLib = () => {
         <Moon class="dark" />
       </button>
 
-      <button title="Share" class="share" @click="onShare">
+      <button title="Share" class="share" @click="copyLink">
         <share />
       </button>
 
-      <button v-if="preferSFC" title="Download" class="download" @click="downloadExample()">
+      <button v-if="preferSFC" title="Download" class="download" @click="downloadProject(store)">
         <Download />
       </button>
 

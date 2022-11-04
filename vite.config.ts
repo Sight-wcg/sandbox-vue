@@ -7,6 +7,7 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Inspect from 'vite-plugin-inspect'
 import Mkcert from 'vite-plugin-mkcert'
+import Compression from 'vite-plugin-compression'
 import { getPackageInfo } from 'local-pkg'
 import { LayuiVueResolver } from 'unplugin-vue-components/resolvers'
 import pkg from './package.json'
@@ -55,6 +56,9 @@ export default defineConfig(async () => {
       }),
       Mkcert(),
       Inspect(),
+      Compression({
+        deleteOriginFile: true
+      }),
     ],
   }
 })

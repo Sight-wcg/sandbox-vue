@@ -141,15 +141,15 @@ export const getSupportedVersions = (
       for (const v of supportedVersions) {
         if (v.includes('-')) {
           if (isInPreRelease) {
-            filteredVersions.push(v)
+            // filteredVersions.push(v)
           }
         } else {
           filteredVersions.push(v)
           isInPreRelease = false
         }
-        if (filteredVersions.length >= 30) {
-          break
-        }
+        // if (filteredVersions.length >= 30) {
+        //   break
+        // }
       }
       supportedVersions = filteredVersions
     }

@@ -7,8 +7,6 @@ import type { SFCOptions } from '@vue/repl'
 
 const loading = ref(true)
 
-const layerLoadingId = layer.load(2, {}, () => {})
-
 const repl = ref<HTMLElement | null>(null)
 
 // enable experimental features
@@ -67,7 +65,6 @@ const store = new ReplStore({
 })
 store.init().then(() => {
   loading.value = false
-  layer.close(layerLoadingId)
 })
 
 // persist state
