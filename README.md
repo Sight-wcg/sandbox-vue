@@ -1,4 +1,5 @@
 # [sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/93cdb381-e59d-4854-a3c3-9f994ad63688/deploy-status)](https://app.netlify.com/sites/melodic-horse-f12d5e/deploys)
 
 一个 Vue3 SFC 沙盒。[sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
 
@@ -103,4 +104,7 @@ npm run preview
 
 如果要部署在 `https://<USERNAME>.github.io/<REPO>/` 上，例如仓库地址为` https://github.com/<USERNAME>/<REPO>`，那么需要设置 base 为 `'/<REPO>/'`。
 
-> 本项目基于 [element-plus-playground](https://github.com/element-plus/element-plus-playground) 和 [Vue SFC Playground](https://sfc.vuejs.org/)
+### 感谢 
+  - [element-plus-playground](https://github.com/element-plus/element-plus-playground)
+  - [Vue SFC Playground](https://sfc.vuejs.org/)
+  - [monaco-volar](https://github.com/Kingwl/monaco-volar)
