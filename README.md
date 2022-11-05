@@ -1,5 +1,5 @@
 # [sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/93cdb381-e59d-4854-a3c3-9f994ad63688/deploy-status)](https://app.netlify.com/sites/melodic-horse-f12d5e/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/93cdb381-e59d-4854-a3c3-9f994ad63688/deploy-status)](https://app.netlify.com/sites/layui-vue-playground/deploys)
 
 一个 Vue3 SFC 沙盒。[sandbox-vue](https://layui-vue.gitee.io/sandbox-vue)
 
